@@ -991,6 +991,8 @@ namespace Microsoft.EntityFrameworkCore.Query
             var selectExpression = TryGetQuery(queryModel.MainFromClause);
             var requiresClientFilter = selectExpression == null;
 
+            var whereClausePredicate=whereClause.Predicate;
+
             if (!requiresClientFilter)
             {
                 var sqlTranslatingExpressionVisitor
@@ -999,7 +1001,7 @@ namespace Microsoft.EntityFrameworkCore.Query
                         targetSelectExpression: selectExpression,
                         topLevelPredicate: whereClause.Predicate);
 
-                var sqlPredicateExpression = sqlTranslatingExpressionVisitor.Visit(whereClause.Predicate);
+                var sqlPredicateExpression = sqlTranslatingExpressionVisitor.Visit(whereClausePredicate);
 
                 if (sqlPredicateExpression != null)
                 {
@@ -1013,7 +1015,7 @@ namespace Microsoft.EntityFrameworkCore.Query
                     if (sqlTranslatingExpressionVisitor.ClientEvalPredicate != null)
                     {
                         requiresClientFilter = true;
-                        whereClause = new WhereClause(sqlTranslatingExpressionVisitor.ClientEvalPredicate);
+                        whereClausePredicate = sqlTranslatingExpressionVisitor.ClientEvalPredicate;
                     }
                 }
                 else
@@ -1028,9 +1030,30 @@ namespace Microsoft.EntityFrameworkCore.Query
             {
                 WarnClientEval(queryModel, whereClause);
 
+                whereClausePredicate = this.PrepareLogicalClauseForLocalEvaluation(whereClausePredicate);
+
+                if (!Object.ReferenceEquals(whereClause.Predicate, whereClausePredicate))
+                {
+                    whereClause = new WhereClause(whereClausePredicate);
+                }
+
+                Debug.Assert(Object.ReferenceEquals(whereClause.Predicate, whereClausePredicate));
+
                 base.VisitWhereClause(whereClause, queryModel, index);
             }
         }
+
+        /// <summary>
+        ///     Prepares logical expression for local evaluation.
+        /// </summary>
+        /// <param name="expression">Original expression from query.</param>
+        /// <returns>Transformed expression for local evaluation.</returns>
+        protected virtual Expression PrepareLogicalClauseForLocalEvaluation(Expression expression)
+        {
+            Check.NotNull(expression, nameof(expression));
+
+            return expression;
+        }//PrepareLogicalClauseForLocalEvaluation
 
         /// <summary>
         ///     Removes orderings for a given query model.
