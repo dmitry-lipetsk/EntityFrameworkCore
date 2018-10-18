@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query.Expressions;
 using Remotion.Linq.Parsing;
@@ -70,6 +71,10 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal
 
                 AddToResult(new IsNullExpression(binaryExpression));
             }
+            else if (binaryExpression.Type.IsNullableType())
+            {
+                AddToResult(new IsNullExpression(binaryExpression));
+            }//if
 
             return binaryExpression;
         }
@@ -85,6 +90,10 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal
                 AddToResult(new IsNullExpression(nullableExpression.Operand));
             }
             else if (ContainsNullableColumnExpression(extensionExpression))
+            {
+                AddToResult(new IsNullExpression(extensionExpression));
+            }
+            else if (extensionExpression.Type.IsNullableType())
             {
                 AddToResult(new IsNullExpression(extensionExpression));
             }
