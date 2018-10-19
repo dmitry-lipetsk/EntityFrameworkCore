@@ -1120,7 +1120,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Internal
 
         private static bool Helper__Test_ObjectExpressionIsComplex(Expression e)
         {
-            if(e is BinaryExpression)
+            if (e is BinaryExpression)
             {
                 return true;
             }
