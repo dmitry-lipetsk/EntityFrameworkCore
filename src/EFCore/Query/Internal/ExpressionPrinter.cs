@@ -632,7 +632,20 @@ namespace Microsoft.EntityFrameworkCore.Query.Internal
 
             if (methodCallExpression.Object != null)
             {
+                bool printBracketsAroundObjectExpr = Helper__Test_ObjectExpressionIsComplex(methodCallExpression.Object);
+
+                if (printBracketsAroundObjectExpr)
+                {
+                    _stringBuilder.Append("(");
+                }
+
                 Visit(methodCallExpression.Object);
+
+                if (printBracketsAroundObjectExpr)
+                {
+                    _stringBuilder.Append(")");
+                }
+
                 _stringBuilder.Append(".");
             }
 
@@ -1104,5 +1117,15 @@ namespace Microsoft.EntityFrameworkCore.Query.Internal
                 stringBuilder.Append(stringValue);
             }
         }
+
+        private static bool Helper__Test_ObjectExpressionIsComplex(Expression e)
+        {
+            if(e is BinaryExpression)
+            {
+                return true;
+            }
+
+            return false;
+        }//Helper__Test_ObjectExpressionIsComplex
     }
 }
