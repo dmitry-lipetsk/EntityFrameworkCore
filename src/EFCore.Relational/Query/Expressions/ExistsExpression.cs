@@ -12,7 +12,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Expressions
     /// <summary>
     ///     Represents a SQL EXISTS expression.
     /// </summary>
-    public class ExistsExpression : Expression
+    public class ExistsExpression : SearchConditionExpression
     {
         /// <summary>
         ///     Creates a new instance of a ExistsExpression..

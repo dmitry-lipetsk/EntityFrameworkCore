@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Expressions
     /// <summary>
     ///     Represents a SQL IS NULL expression.
     /// </summary>
-    public class IsNullExpression : Expression
+    public class IsNullExpression : SearchConditionExpression
     {
         private readonly Expression _operand;
 

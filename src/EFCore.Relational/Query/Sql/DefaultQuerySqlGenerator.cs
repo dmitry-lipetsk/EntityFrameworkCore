@@ -2041,11 +2041,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Sql
                     : expression.IsComparisonOperation()
                       || expression.IsLogicalOperation()
                       || expression.NodeType == ExpressionType.Not
-                      || expression is ExistsExpression
-                      || expression is InExpression
-                      || expression is IsNullExpression
-                      || expression is LikeExpression
-                      || expression is ComparisonExpression;
+                      || expression is SearchConditionExpression;
             }
 
             private static Expression BuildCompareToExpression(Expression expression, bool compareTo)

@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Expressions
     /// <summary>
     ///     Represents a SQL LIKE expression.
     /// </summary>
-    public class LikeExpression : Expression
+    public class LikeExpression : SearchConditionExpression
     {
         /// <summary>
         ///     Creates a new instance of LikeExpression.

@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Expressions
     /// <summary>
     ///     Represents a SQL comparison expression.
     /// </summary>
-    public class ComparisonExpression : Expression
+    public class ComparisonExpression : SearchConditionExpression
     {
         /// <summary>
         ///     Initializes a new instance of the Microsoft.EntityFrameworkCore.Query.Expressions.ComparisonExpression class.

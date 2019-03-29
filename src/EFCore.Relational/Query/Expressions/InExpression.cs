@@ -15,7 +15,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Expressions
     /// <summary>
     ///     Represents a SQL IN expression.
     /// </summary>
-    public class InExpression : Expression
+    public class InExpression : SearchConditionExpression
     {
         /// <summary>
         ///     Creates a new instance of InExpression.
