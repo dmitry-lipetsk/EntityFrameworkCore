@@ -107,12 +107,22 @@ namespace Microsoft.Data.Sqlite
         }
 
         [Fact]
-        public void DefaultTimeout_works()
+        public void DefaultTimeout_defaults_to_connection_string()
         {
-            var connection = new SqliteConnection();
-            connection.DefaultTimeout = 1;
+            var connection = new SqliteConnection("Default Timeout=1");
 
             Assert.Equal(1, connection.DefaultTimeout);
+        }
+
+        [Fact]
+        public void DefaultTimeout_works()
+        {
+            var connection = new SqliteConnection("Default Timeout=1")
+            {
+                DefaultTimeout = 2
+            };
+
+            Assert.Equal(2, connection.DefaultTimeout);
         }
 
         [Fact]
@@ -134,13 +144,11 @@ namespace Microsoft.Data.Sqlite
         }
 
         [Fact]
-        public void Open_throws_when_no_connection_string()
+        public void Open_works_when_no_connection_string()
         {
-            var connection = new SqliteConnection();
+            using var connection = new SqliteConnection();
 
-            var ex = Assert.Throws<InvalidOperationException>(() => connection.Open());
-
-            Assert.Equal(Resources.OpenRequiresSetConnectionString, ex.Message);
+            connection.Open();
         }
 
         [Fact]
@@ -436,7 +444,7 @@ namespace Microsoft.Data.Sqlite
             {
                 connection.Open();
 
-                var ex = Assert.Throws<ArgumentNullException>(() => connection.BackupDatabase(null));
+                var ex = Assert.Throws<ArgumentNullException>(() => connection.BackupDatabase(null!));
 
                 Assert.Equal("destination", ex.ParamName);
             }
@@ -550,7 +558,6 @@ namespace Microsoft.Data.Sqlite
         {
             using (var connection = new SqliteConnection("Data Source=:memory:"))
             {
-                connection.DefaultTimeout = 1;
                 connection.Open();
 
                 using (var transaction = connection.BeginTransaction())
@@ -559,7 +566,6 @@ namespace Microsoft.Data.Sqlite
 
                     Assert.NotNull(command);
                     Assert.Same(connection, command.Connection);
-                    Assert.Equal(1, command.CommandTimeout);
                     Assert.Same(transaction, command.Transaction);
                 }
             }
@@ -611,7 +617,7 @@ namespace Microsoft.Data.Sqlite
             using (var connection = new SqliteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                var ex = Assert.Throws<ArgumentNullException>(() => connection.CreateCollation(null, null));
+                var ex = Assert.Throws<ArgumentNullException>(() => connection.CreateCollation(null!, null));
 
                 Assert.Equal("name", ex.ParamName);
             }
@@ -659,7 +665,7 @@ namespace Microsoft.Data.Sqlite
             using (var connection = new SqliteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                var ex = Assert.Throws<ArgumentNullException>(() => connection.CreateFunction(null, () => 1L));
+                var ex = Assert.Throws<ArgumentNullException>(() => connection.CreateFunction(null!, () => 1L));
 
                 Assert.Equal("name", ex.ParamName);
             }
@@ -744,7 +750,7 @@ namespace Microsoft.Data.Sqlite
             using (var connection = new SqliteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                connection.CreateFunction<object>("test", () => null);
+                connection.CreateFunction<object?>("test", () => null);
 
                 var result = connection.ExecuteScalar<object>("SELECT test();");
 
@@ -819,7 +825,7 @@ namespace Microsoft.Data.Sqlite
             using (var connection = new SqliteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                connection.CreateFunction("test", (string x) => x == null);
+                connection.CreateFunction("test", (string? x) => x == null);
 
                 var result = connection.ExecuteScalar<long>("SELECT test(NULL);");
 
@@ -913,7 +919,7 @@ namespace Microsoft.Data.Sqlite
             using (var connection = new SqliteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                var ex = Assert.Throws<ArgumentNullException>(() => connection.CreateAggregate(null, (string a) => "A"));
+                var ex = Assert.Throws<ArgumentNullException>(() => connection.CreateAggregate(null!, (string? a) => "A"));
 
                 Assert.Equal("name", ex.ParamName);
             }
@@ -945,7 +951,7 @@ namespace Microsoft.Data.Sqlite
             {
                 connection.Open();
                 connection.ExecuteNonQuery("CREATE TABLE dual (dummy); INSERT INTO dual (dummy) VALUES ('X');");
-                connection.CreateAggregate("test", (string a, object[] args) => a + string.Join(", ", args) + "; ");
+                connection.CreateAggregate("test", (string? a, object?[] args) => a + string.Join(", ", args) + "; ");
 
                 var result = connection.ExecuteScalar<string>("SELECT test(dummy) FROM dual;");
 
@@ -960,7 +966,7 @@ namespace Microsoft.Data.Sqlite
             {
                 connection.Open();
                 connection.ExecuteNonQuery("CREATE TABLE dual (dummy); INSERT INTO dual (dummy) VALUES ('X');");
-                connection.CreateAggregate("test", (string a) => throw new Exception("Test"));
+                connection.CreateAggregate("test", (string? a) => throw new Exception("Test"));
 
                 var ex = Assert.Throws<SqliteException>(
                     () => connection.ExecuteScalar<string>("SELECT test() FROM dual;"));
@@ -992,7 +998,7 @@ namespace Microsoft.Data.Sqlite
             {
                 connection.Open();
                 connection.ExecuteNonQuery("CREATE TABLE dual (dummy); INSERT INTO dual (dummy) VALUES ('X');");
-                connection.CreateAggregate("test", (string a) => throw new SqliteException("Test", 200));
+                connection.CreateAggregate("test", (string? a) => throw new SqliteException("Test", 200));
 
                 var ex = Assert.Throws<SqliteException>(
                     () => connection.ExecuteScalar<string>("SELECT test() FROM dual;"));
@@ -1008,8 +1014,8 @@ namespace Microsoft.Data.Sqlite
             {
                 connection.Open();
                 connection.ExecuteNonQuery("CREATE TABLE dual (dummy); INSERT INTO dual (dummy) VALUES ('X');");
-                connection.CreateAggregate("test", (string a) => "A");
-                connection.CreateAggregate("test", default(Func<string, string>));
+                connection.CreateAggregate("test", (string? a) => "A");
+                connection.CreateAggregate("test", default(Func<string?, string>));
 
                 var ex = Assert.Throws<SqliteException>(
                     () => connection.ExecuteScalar<long>("SELECT test() FROM dual;"));
