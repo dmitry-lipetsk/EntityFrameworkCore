@@ -38,6 +38,8 @@ namespace Microsoft.EntityFrameworkCore.Update.Internal
         private readonly IColumnModificationFactory _columnModificationFactory;
         private readonly int _minBatchSize;
         private readonly bool _sensitiveLoggingEnabled;
+        private static readonly bool _useOldStateBehavior =
+            AppContext.TryGetSwitch("Microsoft.EntityFrameworkCore.Issue23668", out var enabled) && enabled;
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -494,7 +496,7 @@ namespace Microsoft.EntityFrameworkCore.Update.Internal
                                 .Where(c => c.PrincipalTable.Name == command.TableName && c.PrincipalTable.Schema == command.Schema);
 
                             if (!constraints.Any()
-                                || (command.EntityState == EntityState.Modified
+                                || ((_useOldStateBehavior ? command.EntityState : entry.EntityState) == EntityState.Modified
                                     && !foreignKey.PrincipalKey.Properties.Any(p => entry.IsModified(p))))
                             {
                                 continue;
@@ -529,7 +531,7 @@ namespace Microsoft.EntityFrameworkCore.Update.Internal
                                 .Where(c => c.Table.Name == command.TableName && c.Table.Schema == command.Schema);
 
                             if (!constraints.Any()
-                                || (command.EntityState == EntityState.Modified
+                                || ((_useOldStateBehavior ? command.EntityState : entry.EntityState) == EntityState.Modified
                                     && !foreignKey.Properties.Any(p => entry.IsModified(p))))
                             {
                                 continue;
@@ -575,7 +577,7 @@ namespace Microsoft.EntityFrameworkCore.Update.Internal
                             {
                                 if (!foreignKey.GetMappedConstraints()
                                         .Any(c => c.Table.Name == command.TableName && c.Table.Schema == command.Schema)
-                                    || (command.EntityState == EntityState.Modified
+                                    || ((_useOldStateBehavior ? command.EntityState : entry.EntityState) == EntityState.Modified
                                         && !foreignKey.Properties.Any(p => entry.IsModified(p))))
                                 {
                                     continue;
@@ -661,7 +663,7 @@ namespace Microsoft.EntityFrameworkCore.Update.Internal
                     var entry = command.Entries[entryIndex];
                     foreach (var index in entry.EntityType.GetIndexes().Where(i => i.IsUnique && i.GetMappedTableIndexes().Any()))
                     {
-                        if (command.EntityState == EntityState.Modified
+                        if ((_useOldStateBehavior ? command.EntityState : entry.EntityState) == EntityState.Modified
                             && !index.Properties.Any(p => entry.IsModified(p)))
                         {
                             continue;
@@ -722,7 +724,7 @@ namespace Microsoft.EntityFrameworkCore.Update.Internal
                     {
                         foreach (var index in entry.EntityType.GetIndexes().Where(i => i.IsUnique && i.GetMappedTableIndexes().Any()))
                         {
-                            if (command.EntityState == EntityState.Modified
+                            if ((_useOldStateBehavior ? command.EntityState : entry.EntityState) == EntityState.Modified
                                 && !index.Properties.Any(p => entry.IsModified(p)))
                             {
                                 continue;

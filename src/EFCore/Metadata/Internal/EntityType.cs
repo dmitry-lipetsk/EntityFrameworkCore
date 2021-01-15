@@ -33,27 +33,27 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         private const string DynamicProxyGenAssemblyName = "DynamicProxyGenAssembly2";
 
         private readonly SortedSet<ForeignKey> _foreignKeys
-            = new SortedSet<ForeignKey>(ForeignKeyComparer.Instance);
+            = new(ForeignKeyComparer.Instance);
 
         private readonly SortedDictionary<string, Navigation> _navigations
-            = new SortedDictionary<string, Navigation>(StringComparer.Ordinal);
+            = new(StringComparer.Ordinal);
 
         private readonly SortedDictionary<string, SkipNavigation> _skipNavigations
-            = new SortedDictionary<string, SkipNavigation>(StringComparer.Ordinal);
+            = new(StringComparer.Ordinal);
 
         private readonly SortedDictionary<IReadOnlyList<IProperty>, Index> _unnamedIndexes
-            = new SortedDictionary<IReadOnlyList<IProperty>, Index>(PropertyListComparer.Instance);
+            = new(PropertyListComparer.Instance);
 
         private readonly SortedDictionary<string, Index> _namedIndexes
-            = new SortedDictionary<string, Index>(StringComparer.Ordinal);
+            = new(StringComparer.Ordinal);
 
         private readonly SortedDictionary<string, Property> _properties;
 
         private readonly SortedDictionary<IReadOnlyList<IProperty>, Key> _keys
-            = new SortedDictionary<IReadOnlyList<IProperty>, Key>(PropertyListComparer.Instance);
+            = new(PropertyListComparer.Instance);
 
         private readonly SortedDictionary<string, ServiceProperty> _serviceProperties
-            = new SortedDictionary<string, ServiceProperty>(StringComparer.Ordinal);
+            = new(StringComparer.Ordinal);
 
         private List<object>? _data;
         private Key? _primaryKey;
@@ -361,7 +361,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         private void UpdateBaseTypeConfigurationSource(ConfigurationSource configurationSource)
             => _baseTypeConfigurationSource = configurationSource.Max(_baseTypeConfigurationSource);
 
-        private readonly SortedSet<EntityType> _directlyDerivedTypes = new SortedSet<EntityType>(EntityTypeFullNameComparer.Instance);
+        private readonly SortedSet<EntityType> _directlyDerivedTypes = new(EntityTypeFullNameComparer.Instance);
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -2544,7 +2544,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         ///     doing so can result in application failures when updating to a new Entity Framework Core release.
         /// </summary>
         public virtual PropertyCounts Counts
-            => NonCapturingLazyInitializer.EnsureInitialized(ref _counts, this, entityType => entityType.CalculateCounts());
+            => NonCapturingLazyInitializer.EnsureInitialized(ref _counts, this, static entityType => entityType.CalculateCounts());
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -2555,7 +2555,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         public virtual Func<InternalEntityEntry, ISnapshot> RelationshipSnapshotFactory
             => NonCapturingLazyInitializer.EnsureInitialized(
                 ref _relationshipSnapshotFactory, this,
-                entityType => new RelationshipSnapshotFactoryFactory().Create(entityType));
+                static entityType => new RelationshipSnapshotFactoryFactory().Create(entityType));
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -2566,7 +2566,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         public virtual Func<InternalEntityEntry, ISnapshot> OriginalValuesFactory
             => NonCapturingLazyInitializer.EnsureInitialized(
                 ref _originalValuesFactory, this,
-                entityType => new OriginalValuesFactoryFactory().Create(entityType));
+                static entityType => new OriginalValuesFactoryFactory().Create(entityType));
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -2577,7 +2577,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         public virtual Func<InternalEntityEntry, ISnapshot> StoreGeneratedValuesFactory
             => NonCapturingLazyInitializer.EnsureInitialized(
                 ref _storeGeneratedValuesFactory, this,
-                entityType => new SidecarValuesFactoryFactory().Create(entityType));
+                static entityType => new SidecarValuesFactoryFactory().Create(entityType));
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -2588,7 +2588,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         public virtual Func<InternalEntityEntry, ISnapshot> TemporaryValuesFactory
             => NonCapturingLazyInitializer.EnsureInitialized(
                 ref _temporaryValuesFactory, this,
-                entityType => new TemporaryValuesFactoryFactory().Create(entityType));
+                static entityType => new TemporaryValuesFactoryFactory().Create(entityType));
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -2599,7 +2599,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         public virtual Func<ValueBuffer, ISnapshot> ShadowValuesFactory
             => NonCapturingLazyInitializer.EnsureInitialized(
                 ref _shadowValuesFactory, this,
-                entityType => new ShadowValuesFactoryFactory().Create(entityType));
+                static entityType => new ShadowValuesFactoryFactory().Create(entityType));
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -2610,7 +2610,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         public virtual Func<ISnapshot> EmptyShadowValuesFactory
             => NonCapturingLazyInitializer.EnsureInitialized(
                 ref _emptyShadowValuesFactory, this,
-                entityType => new EmptyShadowValuesFactoryFactory().CreateEmpty(entityType));
+                static entityType => new EmptyShadowValuesFactoryFactory().CreateEmpty(entityType));
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -2621,7 +2621,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         public virtual Func<MaterializationContext, object> InstanceFactory
             => NonCapturingLazyInitializer.EnsureInitialized(
                 ref _instanceFactory, this,
-                entityType =>
+                static entityType =>
                 {
                     var binding = (InstantiationBinding?)entityType[CoreAnnotationNames.ServiceOnlyConstructorBinding];
                     if (binding == null)
@@ -2631,7 +2631,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
 
                     var contextParam = Expression.Parameter(typeof(MaterializationContext), "mc");
 
-                    _instanceFactory = Expression.Lambda<Func<MaterializationContext, object>>(
+                    entityType._instanceFactory = Expression.Lambda<Func<MaterializationContext, object>>(
                             binding.CreateConstructorExpression(
                                 new ParameterBindingInfo(entityType, contextParam)),
                             contextParam)
@@ -4250,7 +4250,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         ///     doing so can result in application failures when updating to a new Entity Framework Core release.
         /// </summary>
         public virtual DebugView DebugView
-            => new DebugView(
+            => new(
                 () => this.ToDebugString(MetadataDebugStringOptions.ShortDefault),
                 () => this.ToDebugString(MetadataDebugStringOptions.LongDefault));
     }
