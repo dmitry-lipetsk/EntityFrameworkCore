@@ -239,7 +239,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
                 Dependencies.Logger.NonOwnershipInverseNavigationWarning(
                     entityType, navigationMemberInfo,
                     targetEntityTypeBuilder.Metadata, inverseNavigationPropertyInfo,
-                    ownership.PrincipalToDependent?.GetIdentifyingMemberInfo());
+                    ownership.PrincipalToDependent?.GetIdentifyingMemberInfo()!);
 
                 return null;
             }
@@ -309,11 +309,14 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
                 return;
             }
 
-            var leastDerivedEntityTypes = modelBuilder.Metadata.FindLeastDerivedEntityTypes(
-                declaringType,
-                t => !t.Builder.IsIgnored(navigationMemberInfo.GetSimpleMemberName(), fromDataAnnotation: true));
+            var leastDerivedEntityTypes = modelBuilder.Metadata.FindLeastDerivedEntityTypes(declaringType);
             foreach (var leastDerivedEntityType in leastDerivedEntityTypes)
             {
+                if (leastDerivedEntityType.Builder.IsIgnored(navigationMemberInfo.GetSimpleMemberName(), fromDataAnnotation: true))
+                {
+                    continue;
+                }
+
                 Process(leastDerivedEntityType.Builder, navigationMemberInfo, targetClrType, attribute);
             }
         }
@@ -445,9 +448,9 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
                             Dependencies.Logger.MultipleInversePropertiesSameTargetWarning(
                                 new[]
                                 {
-                                    Tuple.Create(
+                                    Tuple.Create<MemberInfo?, Type>(
                                         referencingNavigationWithAttribute.Item1, referencingNavigationWithAttribute.Item2.ClrType),
-                                    Tuple.Create(ambiguousInverse.Value.Item1, ambiguousInverse.Value.Item2.ClrType)
+                                    Tuple.Create<MemberInfo?, Type>(ambiguousInverse.Value.Item1, ambiguousInverse.Value.Item2.ClrType)
                                 },
                                 inverseNavigation.Navigation,
                                 entityType.ClrType);

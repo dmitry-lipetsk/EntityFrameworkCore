@@ -6,7 +6,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -26,7 +25,7 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
     ///         not used in application code.
     ///     </para>
     /// </summary>
-    public class Annotatable : IMutableAnnotatable
+    public class Annotatable : IAnnotatable, IMutableAnnotatable
     {
         private SortedDictionary<string, Annotation>? _annotations;
         private ConcurrentDictionary<string, Annotation>? _runtimeAnnotations;
@@ -38,7 +37,7 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         ///         Runtime annotations cannot be changed when the object is not read-only.
         ///     </para>
         /// </summary>
-        protected virtual bool IsReadOnly => false;
+        public virtual bool IsReadOnly => false;
 
         /// <summary>
         ///     Throws if the model is not read-only.
@@ -320,7 +319,7 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
             => (TValue)GetOrCreateRuntimeAnnotations().GetOrAdd(
                 name,
                 static (n, t) => t.Annotatable.CreateRuntimeAnnotation(n, t.CreateValue(t.Argument)),
-                (CreateValue: valueFactory, Argument: factoryArgument, Annotatable: this)).Value;
+                (CreateValue: valueFactory, Argument: factoryArgument, Annotatable: this)).Value!;
 
         /// <summary>
         ///     Gets the runtime annotation with the given name, returning <see langword="null" /> if it does not exist.
@@ -379,12 +378,12 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
 
         /// <inheritdoc />
         [DebuggerStepThrough]
-        IEnumerable<IAnnotation> IAnnotatable.GetAnnotations()
+        IEnumerable<IAnnotation> IReadOnlyAnnotatable.GetAnnotations()
             => GetAnnotations();
 
         /// <inheritdoc />
         [DebuggerStepThrough]
-        IAnnotation? IAnnotatable.FindAnnotation(string name)
+        IAnnotation? IReadOnlyAnnotatable.FindAnnotation(string name)
             => FindAnnotation(name);
 
         /// <inheritdoc />
