@@ -621,7 +621,7 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
                 return;
             }
 
-            var discriminatorProperty = rootEntityType.GetDiscriminatorProperty();
+            var discriminatorProperty = rootEntityType.FindDiscriminatorProperty();
             if (discriminatorProperty == null)
             {
                 throw new InvalidOperationException(
@@ -1079,7 +1079,7 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
                     {
                         if (!identityMaps.TryGetValue(key, out identityMap))
                         {
-                            identityMap = key.GetIdentityMapFactory()(sensitiveDataLogged);
+                            identityMap = ((IRuntimeKey)key).GetIdentityMapFactory()(sensitiveDataLogged);
                             identityMaps[key] = identityMap;
                         }
                     }

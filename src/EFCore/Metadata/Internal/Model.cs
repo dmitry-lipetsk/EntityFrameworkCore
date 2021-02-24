@@ -37,14 +37,13 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
     ///         The implementation does not need to be thread-safe.
     ///     </para>
     /// </summary>
-    public class Model : ConventionAnnotatable, IMutableModel, IConventionModel, IModel
+    public class Model : ConventionAnnotatable, IMutableModel, IConventionModel, IRuntimeModel
     {
         /// <summary>
         ///     The CLR type that is used for property bag entity types when no other type is specified.
         /// </summary>
         public static readonly Type DefaultPropertyBagType = typeof(Dictionary<string, object>);
 
-        private SingletonModelDependencies? _modelDependencies;
         private readonly SortedDictionary<string, EntityType> _entityTypes = new(StringComparer.Ordinal);
         private readonly ConcurrentDictionary<Type, PropertyInfo?> _indexerPropertyInfoMap = new();
         private readonly ConcurrentDictionary<Type, string> _clrTypeNameMap = new();
@@ -449,7 +448,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         ///     any release. You should only use it directly in your code with extreme caution and knowing that
         ///     doing so can result in application failures when updating to a new Entity Framework Core release.
         /// </summary>
-        public virtual IEnumerable<EntityType> GetEntityTypes([NotNull] Type type)
+        public virtual IEnumerable<EntityType> FindEntityTypes([NotNull] Type type)
         {
             var result = GetEntityTypes(GetDisplayName(type));
             return _sharedTypes.TryGetValue(type, out var existingTypes)
@@ -753,7 +752,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         public virtual PropertyAccessMode? SetPropertyAccessMode(
             PropertyAccessMode? propertyAccessMode,
             ConfigurationSource configurationSource)
-            => (PropertyAccessMode?)this.SetOrRemoveAnnotation(
+            => (PropertyAccessMode?)SetOrRemoveAnnotation(
                 CoreAnnotationNames.PropertyAccessMode, propertyAccessMode, configurationSource)?.Value;
 
         /// <summary>
@@ -951,22 +950,6 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         /// </summary>
         public virtual object? RelationalModel
             => ((IAnnotatable)this).FindRuntimeAnnotationValue("Relational:RelationalModel");
-
-        /// <summary>
-        ///     The runtime service dependencies.
-        /// </summary>
-        SingletonModelDependencies? IModel.ModelDependencies
-        {
-            get
-            {
-                if (_modelDependencies == null)
-                {
-                    EnsureReadOnly();
-                }
-
-                return _modelDependencies;
-            }
-        }
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -1220,8 +1203,8 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         ///     doing so can result in application failures when updating to a new Entity Framework Core release.
         /// </summary>
         [DebuggerStepThrough]
-        IEnumerable<IReadOnlyEntityType> IReadOnlyModel.GetEntityTypes(Type type)
-            => GetEntityTypes(type);
+        IEnumerable<IReadOnlyEntityType> IReadOnlyModel.FindEntityTypes(Type type)
+            => FindEntityTypes(type);
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -1230,8 +1213,8 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         ///     doing so can result in application failures when updating to a new Entity Framework Core release.
         /// </summary>
         [DebuggerStepThrough]
-        IEnumerable<IEntityType> IModel.GetEntityTypes(Type type)
-            => GetEntityTypes(type);
+        IEnumerable<IEntityType> IModel.FindEntityTypes(Type type)
+            => FindEntityTypes(type);
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -1536,14 +1519,5 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         [DebuggerStepThrough]
         string? IConventionModel.AddIgnored(Type type, bool fromDataAnnotation)
             => AddIgnored(type, fromDataAnnotation ? ConfigurationSource.DataAnnotation : ConfigurationSource.Convention);
-
-        /// <summary>
-        ///     Set the runtime service dependencies.
-        /// </summary>
-        /// <param name="modelDependencies"> The runtime service dependencies. </param>
-        /// <returns> <see langword="true"/> if the runtime service dependencies were set; <see langword="false"/> otherwise. </returns>
-        [DebuggerStepThrough]
-        bool IModel.SetModelDependencies(SingletonModelDependencies modelDependencies)
-            => Interlocked.CompareExchange(ref _modelDependencies, modelDependencies, null) == null;
     }
 }

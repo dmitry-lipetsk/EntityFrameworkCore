@@ -77,56 +77,6 @@ namespace Microsoft.EntityFrameworkCore
                 typeof(EntityFrameworkServiceCollectionExtensions)
             };
 
-            public override
-                List<(Type Type,
-                    Type ReadonlyExtensions,
-                    Type MutableExtensions,
-                    Type ConventionExtensions,
-                    Type ConventionBuilderExtensions,
-                    Type RuntimeExtensions)> MetadataExtensionTypes { get; } = new()
-                {
-                    (
-                        typeof(IReadOnlyKey),
-                        typeof(KeyExtensions),
-                        typeof(MutableKeyExtensions),
-                        typeof(ConventionKeyExtensions),
-                        null,
-                        null
-                    ),
-                    (
-                        typeof(IReadOnlyForeignKey),
-                        typeof(ForeignKeyExtensions),
-                        typeof(MutableForeignKeyExtensions),
-                        typeof(ConventionForeignKeyExtensions),
-                        null,
-                        null
-                    ),
-                    (
-                        typeof(IReadOnlyProperty),
-                        typeof(PropertyExtensions),
-                        typeof(MutablePropertyExtensions),
-                        typeof(ConventionPropertyExtensions),
-                        null,
-                        null
-                    ),
-                    (
-                        typeof(IReadOnlyNavigation),
-                        typeof(NavigationExtensions),
-                        typeof(MutableNavigationExtensions),
-                        typeof(ConventionNavigationExtensions),
-                        null,
-                        null
-                    ),
-                    (
-                        typeof(IReadOnlyPropertyBase),
-                        typeof(PropertyBaseExtensions),
-                        typeof(MutablePropertyBaseExtensions),
-                        typeof(ConventionPropertyBaseExtensions),
-                        null,
-                        null
-                    )
-                };
-
             public override HashSet<MethodInfo> NonVirtualMethods { get; } = new()
             {
                 typeof(CompiledQueryCacheKeyGenerator).GetMethod("GenerateCacheKeyCore", AnyInstance),
@@ -165,7 +115,7 @@ namespace Microsoft.EntityFrameworkCore
                 typeof(IConventionAnnotatable).GetMethod(nameof(IConventionAnnotatable.SetOrRemoveAnnotation)),
                 typeof(IConventionModelBuilder).GetMethod(nameof(IConventionModelBuilder.HasNoEntityType)),
                 typeof(IReadOnlyEntityType).GetMethod(nameof(IReadOnlyEntityType.GetConcreteDerivedTypesInclusive)),
-                typeof(IReadOnlyEntityType).GetMethod(nameof(IReadOnlyEntityType.GetClosestCommonParent)),
+                typeof(IReadOnlyEntityType).GetMethod(nameof(IReadOnlyEntityType.FindClosestCommonParent)),
                 typeof(IReadOnlyEntityType).GetMethod(nameof(IReadOnlyEntityType.LeastDerivedType)),
                 typeof(IMutableEntityType).GetMethod(nameof(IMutableEntityType.AddData)),
                 typeof(IReadOnlyNavigationBase).GetMethod("get_DeclaringEntityType"),
@@ -213,7 +163,8 @@ namespace Microsoft.EntityFrameworkCore
                 typeof(IConventionModel).GetMethod(nameof(IConventionModel.AddShared)),
                 typeof(IMutableModel).GetMethod(nameof(IMutableModel.AddOwned)),
                 typeof(IMutableModel).GetMethod(nameof(IMutableModel.AddShared)),
-                typeof(IMutableEntityType).GetMethod(nameof(IMutableEntityType.AddData))
+                typeof(IMutableEntityType).GetMethod(nameof(IMutableEntityType.AddData)),
+                typeof(IConventionEntityType).GetMethod(nameof(IConventionEntityType.LeastDerivedType))
             };
         }
     }

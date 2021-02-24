@@ -70,7 +70,9 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
             ValueGenerationManager = dependencies.ValueGenerationManager;
             _model = dependencies.Model;
             _database = dependencies.Database;
-            _concurrencyDetector = dependencies.ConcurrencyDetector;
+            _concurrencyDetector = dependencies.CoreSingletonOptions.IsConcurrencyDetectionEnabled
+                ? dependencies.ConcurrencyDetector
+                : null;
             Context = dependencies.CurrentContext.Context;
             EntityFinderFactory = new EntityFinderFactory(
                 dependencies.EntityFinderSource, this, dependencies.SetSource, dependencies.CurrentContext.Context);
@@ -321,7 +323,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
             if (entityType.HasSharedClrType)
             {
                 var mapKey = entry.Entity ?? entry;
-                foreach (var otherType in _model.GetEntityTypes(entityType.ClrType)
+                foreach (var otherType in _model.FindEntityTypes(entityType.ClrType)
                     .Where(et => et != entityType && TryGetEntry(mapKey, et) != null))
                 {
                     UpdateLogger.DuplicateDependentEntityTypeInstanceWarning(entityType, otherType);
@@ -433,7 +435,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
         {
             if (_identityMap0 == null)
             {
-                _identityMap0 = key.GetIdentityMapFactory()(SensitiveLoggingEnabled);
+                _identityMap0 = ((IRuntimeKey)key).GetIdentityMapFactory()(SensitiveLoggingEnabled);
                 return _identityMap0;
             }
 
@@ -444,7 +446,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
 
             if (_identityMap1 == null)
             {
-                _identityMap1 = key.GetIdentityMapFactory()(SensitiveLoggingEnabled);
+                _identityMap1 = ((IRuntimeKey)key).GetIdentityMapFactory()(SensitiveLoggingEnabled);
                 return _identityMap1;
             }
 
@@ -460,7 +462,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
 
             if (!_identityMaps.TryGetValue(key, out var identityMap))
             {
-                identityMap = key.GetIdentityMapFactory()(SensitiveLoggingEnabled);
+                identityMap = ((IRuntimeKey)key).GetIdentityMapFactory()(SensitiveLoggingEnabled);
                 _identityMaps[key] = identityMap;
             }
 
@@ -984,7 +986,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
             if (!_changeDetectorInitialized)
             {
                 _changeDetector = Context.ChangeTracker.AutoDetectChangesEnabled
-                    && !((Model)Context.Model).SkipDetectChanges
+                    && !((IRuntimeModel)Context.Model).SkipDetectChanges
                         ? Context.GetDependencies().ChangeDetector
                         : null;
                 _changeDetectorInitialized = true;
@@ -1085,11 +1087,17 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
         /// </summary>
         protected virtual int SaveChanges([NotNull] IList<IUpdateEntry> entriesToSave)
         {
-            using (_concurrencyDetector.EnterCriticalSection())
+            _concurrencyDetector?.EnterCriticalSection();
+
+            try
             {
                 EntityFrameworkEventSource.Log.SavingChanges();
 
                 return _database.SaveChanges(entriesToSave);
+            }
+            finally
+            {
+                _concurrencyDetector?.ExitCriticalSection();
             }
         }
 
@@ -1103,12 +1111,18 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
             [NotNull] IList<IUpdateEntry> entriesToSave,
             CancellationToken cancellationToken = default)
         {
-            using (_concurrencyDetector.EnterCriticalSection())
+            _concurrencyDetector?.EnterCriticalSection();
+
+            try
             {
                 EntityFrameworkEventSource.Log.SavingChanges();
 
                 return await _database.SaveChangesAsync(entriesToSave, cancellationToken)
                     .ConfigureAwait(false);
+            }
+            finally
+            {
+                _concurrencyDetector?.ExitCriticalSection();
             }
         }
 
@@ -1120,17 +1134,20 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
         /// </summary>
         public virtual int SaveChanges(bool acceptAllChangesOnSuccess)
             => Context.Database.AutoTransactionsEnabled
-                ? Dependencies.ExecutionStrategyFactory.Create().Execute(acceptAllChangesOnSuccess, SaveChanges, null)
-                : SaveChanges(Context, acceptAllChangesOnSuccess);
+                ? Dependencies.ExecutionStrategyFactory.Create().Execute(
+                        (StateManager: this, AcceptAllChangesOnSuccess: acceptAllChangesOnSuccess),
+                        (_, t) => SaveChanges(t.StateManager, t.AcceptAllChangesOnSuccess),
+                        null)
+                : SaveChanges(this, acceptAllChangesOnSuccess);
 
-        private int SaveChanges(DbContext _, bool acceptAllChangesOnSuccess)
+        private static int SaveChanges(StateManager stateManager, bool acceptAllChangesOnSuccess)
         {
-            if (ChangedCount == 0)
+            if (stateManager.ChangedCount == 0)
             {
                 return 0;
             }
 
-            var entriesToSave = GetEntriesToSave(cascadeChanges: true);
+            var entriesToSave = stateManager.GetEntriesToSave(cascadeChanges: true);
             if (entriesToSave.Count == 0)
             {
                 return 0;
@@ -1138,8 +1155,8 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
 
             try
             {
-                SavingChanges = true;
-                var result = SaveChanges(entriesToSave);
+                stateManager.SavingChanges = true;
+                var result = stateManager.SaveChanges(entriesToSave);
 
                 if (acceptAllChangesOnSuccess)
                 {
@@ -1159,7 +1176,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
             }
             finally
             {
-                SavingChanges = false;
+                stateManager.SavingChanges = false;
             }
         }
 
@@ -1174,20 +1191,23 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
             CancellationToken cancellationToken = default)
             => Context.Database.AutoTransactionsEnabled
                 ? Dependencies.ExecutionStrategyFactory.Create().ExecuteAsync(
-                    acceptAllChangesOnSuccess, SaveChangesAsync, null, cancellationToken)
-                : SaveChangesAsync(Context, acceptAllChangesOnSuccess, cancellationToken);
+                    (StateManager: this, AcceptAllChangesOnSuccess: acceptAllChangesOnSuccess),
+                    (_, t, cancellationToken) => SaveChangesAsync(t.StateManager, t.AcceptAllChangesOnSuccess, cancellationToken),
+                    null,
+                    cancellationToken)
+                : SaveChangesAsync(this, acceptAllChangesOnSuccess, cancellationToken);
 
-        private async Task<int> SaveChangesAsync(
-            DbContext _,
+        private static async Task<int> SaveChangesAsync(
+            StateManager stateManager,
             bool acceptAllChangesOnSuccess,
             CancellationToken cancellationToken)
         {
-            if (ChangedCount == 0)
+            if (stateManager.ChangedCount == 0)
             {
                 return 0;
             }
 
-            var entriesToSave = GetEntriesToSave(cascadeChanges: true);
+            var entriesToSave = stateManager.GetEntriesToSave(cascadeChanges: true);
             if (entriesToSave.Count == 0)
             {
                 return 0;
@@ -1195,8 +1215,8 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
 
             try
             {
-                SavingChanges = true;
-                var result = await SaveChangesAsync(entriesToSave, cancellationToken)
+                stateManager.SavingChanges = true;
+                var result = await stateManager.SaveChangesAsync(entriesToSave, cancellationToken)
                     .ConfigureAwait(acceptAllChangesOnSuccess);
 
                 if (acceptAllChangesOnSuccess)
@@ -1217,7 +1237,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
             }
             finally
             {
-                SavingChanges = false;
+                stateManager.SavingChanges = false;
             }
         }
 

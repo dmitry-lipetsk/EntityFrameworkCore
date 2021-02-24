@@ -64,7 +64,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking
                 var context = InternalEntry.StateManager.Context;
 
                 var changeDetector = context.ChangeTracker.AutoDetectChangesEnabled
-                    && !((Model)context.Model).SkipDetectChanges
+                    && !((IRuntimeModel)context.Model).SkipDetectChanges
                         ? context.GetDependencies().ChangeDetector
                         : null;
 
@@ -283,7 +283,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking
                     : InternalEntry.StateManager.GetOrCreateEntry(entity, Metadata.TargetEntityType);
 
         private ICollectionLoader TargetLoader
-            => _loader ??= Metadata is ISkipNavigation skipNavigation
+            => _loader ??= Metadata is IRuntimeSkipNavigation skipNavigation
                 ? skipNavigation.GetManyToManyLoader()
                 : new EntityFinderCollectionLoaderAdapter(
                     InternalEntry.StateManager.CreateEntityFinder(Metadata.TargetEntityType),
