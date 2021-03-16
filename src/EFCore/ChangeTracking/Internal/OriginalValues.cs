@@ -20,7 +20,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
                 _values = ((IRuntimeEntityType)entry.EntityType).OriginalValuesFactory(entry);
             }
 
-            public object GetValue(InternalEntityEntry entry, IProperty property)
+            public object? GetValue(InternalEntityEntry entry, IProperty property)
             {
                 var index = property.GetOriginalValueIndex();
                 if (index == -1)
@@ -43,7 +43,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
                 return IsEmpty ? entry.GetCurrentValue<T>(property) : _values.GetValue<T>(index);
             }
 
-            public void SetValue(IProperty property, object value, int index)
+            public void SetValue(IProperty property, object? value, int index)
             {
                 Check.DebugAssert(!IsEmpty, "Original values are empty");
 
@@ -103,7 +103,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking.Internal
                 }
             }
 
-            private static object SnapshotValue(IProperty property, object value)
+            private static object? SnapshotValue(IProperty property, object? value)
             {
                 var comparer = property.GetValueComparer();
 

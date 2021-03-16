@@ -21,8 +21,6 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Update;
 using Microsoft.Extensions.Logging;
 
-#nullable enable
-
 namespace Microsoft.EntityFrameworkCore.Diagnostics
 {
     /// <summary>
@@ -381,6 +379,36 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
         }
 
         private static string RowLimitingOperationWithoutOrderByWarning(EventDefinitionBase definition, EventData payload)
+        {
+            var d = (EventDefinition)definition;
+            return d.GenerateMessage();
+        }
+
+        /// <summary>
+        ///     Logs for the <see cref="CoreEventId.DistinctAfterOrderByWithoutRowLimitingOperatorWarning" /> event.
+        /// </summary>
+        /// <param name="diagnostics"> The diagnostics logger to use. </param>
+        public static void DistinctAfterOrderByWithoutRowLimitingOperatorWarning(
+            [NotNull] this IDiagnosticsLogger<DbLoggerCategory.Query> diagnostics)
+        {
+            var definition = CoreResources.LogDistinctAfterOrderByWithoutRowLimitingOperatorWarning(diagnostics);
+
+            if (diagnostics.ShouldLog(definition))
+            {
+                definition.Log(diagnostics);
+            }
+
+            if (diagnostics.NeedsEventData(definition, out var diagnosticSourceEnabled, out var simpleLogEnabled))
+            {
+                var eventData = new EventData(
+                    definition,
+                    DistinctAfterOrderByWithoutRowLimitingOperatorWarning);
+
+                diagnostics.DispatchEventData(definition, eventData, diagnosticSourceEnabled, simpleLogEnabled);
+            }
+        }
+
+        private static string DistinctAfterOrderByWithoutRowLimitingOperatorWarning(EventDefinitionBase definition, EventData payload)
         {
             var d = (EventDefinition)definition;
             return d.GenerateMessage();
@@ -1725,7 +1753,7 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
             {
                 definition.Log(
                     diagnostics,
-                    string.Join(", ", conflictingNavigations.Select(n => n.Item2.ShortDisplayName() + "." + n.Item1.Name)),
+                    string.Join(", ", conflictingNavigations.Select(n => n.Item2.ShortDisplayName() + "." + n.Item1?.Name)),
                     inverseNavigation.Name);
             }
 
@@ -2120,8 +2148,8 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
             [NotNull] this IDiagnosticsLogger<DbLoggerCategory.ChangeTracking> diagnostics,
             [NotNull] InternalEntityEntry internalEntityEntry,
             [NotNull] IProperty property,
-            [CanBeNull] object oldValue,
-            [CanBeNull] object newValue)
+            [CanBeNull] object? oldValue,
+            [CanBeNull] object? newValue)
         {
             var definition = CoreResources.LogPropertyChangeDetected(diagnostics);
 
@@ -2165,8 +2193,8 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
             [NotNull] this IDiagnosticsLogger<DbLoggerCategory.ChangeTracking> diagnostics,
             [NotNull] InternalEntityEntry internalEntityEntry,
             [NotNull] IProperty property,
-            [CanBeNull] object oldValue,
-            [CanBeNull] object newValue)
+            [CanBeNull] object? oldValue,
+            [CanBeNull] object? newValue)
         {
             var definition = CoreResources.LogPropertyChangeDetectedSensitive(diagnostics);
 
@@ -2219,8 +2247,8 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
             [NotNull] this IDiagnosticsLogger<DbLoggerCategory.ChangeTracking> diagnostics,
             [NotNull] InternalEntityEntry internalEntityEntry,
             [NotNull] IProperty property,
-            [CanBeNull] object oldValue,
-            [CanBeNull] object newValue)
+            [CanBeNull] object? oldValue,
+            [CanBeNull] object? newValue)
         {
             var definition = CoreResources.LogForeignKeyChangeDetected(diagnostics);
 
@@ -2267,8 +2295,8 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
             [NotNull] this IDiagnosticsLogger<DbLoggerCategory.ChangeTracking> diagnostics,
             [NotNull] InternalEntityEntry internalEntityEntry,
             [NotNull] IProperty property,
-            [CanBeNull] object oldValue,
-            [CanBeNull] object newValue)
+            [CanBeNull] object? oldValue,
+            [CanBeNull] object? newValue)
         {
             var definition = CoreResources.LogForeignKeyChangeDetectedSensitive(diagnostics);
 
@@ -2533,8 +2561,8 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
             [NotNull] this IDiagnosticsLogger<DbLoggerCategory.ChangeTracking> diagnostics,
             [NotNull] InternalEntityEntry internalEntityEntry,
             [NotNull] INavigation navigation,
-            [CanBeNull] object oldValue,
-            [CanBeNull] object newValue)
+            [CanBeNull] object? oldValue,
+            [CanBeNull] object? newValue)
         {
             var definition = CoreResources.LogReferenceChangeDetected(diagnostics);
 
@@ -2578,8 +2606,8 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
             [NotNull] this IDiagnosticsLogger<DbLoggerCategory.ChangeTracking> diagnostics,
             [NotNull] InternalEntityEntry internalEntityEntry,
             [NotNull] INavigation navigation,
-            [CanBeNull] object oldValue,
-            [CanBeNull] object newValue)
+            [CanBeNull] object? oldValue,
+            [CanBeNull] object? newValue)
         {
             var definition = CoreResources.LogReferenceChangeDetectedSensitive(diagnostics);
 
@@ -2808,7 +2836,7 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
             [NotNull] this IDiagnosticsLogger<DbLoggerCategory.ChangeTracking> diagnostics,
             [NotNull] InternalEntityEntry internalEntityEntry,
             [NotNull] IProperty property,
-            [CanBeNull] object value,
+            [CanBeNull] object? value,
             bool temporary)
         {
             var definition = temporary
@@ -2859,7 +2887,7 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
             [NotNull] this IDiagnosticsLogger<DbLoggerCategory.ChangeTracking> diagnostics,
             [NotNull] InternalEntityEntry internalEntityEntry,
             [NotNull] IProperty property,
-            [CanBeNull] object value,
+            [CanBeNull] object? value,
             bool temporary)
         {
             var definition = temporary

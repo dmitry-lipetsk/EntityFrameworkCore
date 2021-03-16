@@ -9,8 +9,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Utilities;
 
-#nullable enable
-
 namespace Microsoft.EntityFrameworkCore.Metadata
 {
     /// <summary>
@@ -58,7 +56,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata
         /// </summary>
         IEnumerable<ICheckConstraint> CheckConstraints
             => EntityTypeMappings.SelectMany(m => CheckConstraint.GetCheckConstraints(m.EntityType))
-                .Distinct((x, y) => x.Name == y.Name);
+                .Distinct((x, y) => x!.Name == y!.Name);
 
         /// <summary>
         ///     Gets the comment for this table.

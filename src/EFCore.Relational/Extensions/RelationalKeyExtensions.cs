@@ -9,8 +9,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Utilities;
 
-#nullable enable
-
 // ReSharper disable once CheckNamespace
 namespace Microsoft.EntityFrameworkCore
 {
@@ -249,7 +247,7 @@ namespace Microsoft.EntityFrameworkCore
         public static IMutableKey? FindSharedObjectRootKey(
             [NotNull] this IMutableKey key,
             in StoreObjectIdentifier storeObject)
-            => (IMutableKey?)((IKey)key).FindSharedObjectRootKey(storeObject);
+            => (IMutableKey?)((IReadOnlyKey)key).FindSharedObjectRootKey(storeObject);
 
         /// <summary>
         ///     <para>
@@ -266,6 +264,23 @@ namespace Microsoft.EntityFrameworkCore
         public static IConventionKey? FindSharedObjectRootKey(
             [NotNull] this IConventionKey key,
             in StoreObjectIdentifier storeObject)
-            => (IConventionKey?)((IKey)key).FindSharedObjectRootKey(storeObject);
+            => (IConventionKey?)((IReadOnlyKey)key).FindSharedObjectRootKey(storeObject);
+
+        /// <summary>
+        ///     <para>
+        ///         Finds the first <see cref="IConventionKey" /> that is mapped to the same constraint in a shared table-like object.
+        ///     </para>
+        ///     <para>
+        ///         This method is typically used by database providers (and other extensions). It is generally
+        ///         not used in application code.
+        ///     </para>
+        /// </summary>
+        /// <param name="key"> The key. </param>
+        /// <param name="storeObject"> The identifier of the containing store object. </param>
+        /// <returns> The key found, or <see langword="null" /> if none was found.</returns>
+        public static IKey? FindSharedObjectRootKey(
+            [NotNull] this IKey key,
+            in StoreObjectIdentifier storeObject)
+            => (IKey?)((IReadOnlyKey)key).FindSharedObjectRootKey(storeObject);
     }
 }

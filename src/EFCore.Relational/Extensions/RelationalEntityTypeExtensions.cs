@@ -10,8 +10,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Utilities;
 
-#nullable enable
-
 // ReSharper disable once CheckNamespace
 namespace Microsoft.EntityFrameworkCore
 {
@@ -836,7 +834,7 @@ namespace Microsoft.EntityFrameworkCore
                 [NotNull] this IMutableEntityType entityType,
                 in StoreObjectIdentifier storeObject)
             // ReSharper disable once RedundantCast
-            => ((IEntityType)entityType).FindRowInternalForeignKeys(storeObject).Cast<IMutableForeignKey>();
+            => ((IReadOnlyEntityType)entityType).FindRowInternalForeignKeys(storeObject).Cast<IMutableForeignKey>();
 
         /// <summary>
         ///     Gets the foreign keys for the given entity type that point to other entity types
@@ -848,7 +846,19 @@ namespace Microsoft.EntityFrameworkCore
                 [NotNull] this IConventionEntityType entityType,
                 in StoreObjectIdentifier storeObject)
             // ReSharper disable once RedundantCast
-            => ((IEntityType)entityType).FindRowInternalForeignKeys(storeObject).Cast<IConventionForeignKey>();
+            => ((IReadOnlyEntityType)entityType).FindRowInternalForeignKeys(storeObject).Cast<IConventionForeignKey>();
+
+        /// <summary>
+        ///     Gets the foreign keys for the given entity type that point to other entity types
+        ///     sharing the same table-like store object.
+        /// </summary>
+        /// <param name="entityType"> The entity type. </param>
+        /// <param name="storeObject"> The identifier of the store object. </param>
+        public static IEnumerable<IForeignKey> FindRowInternalForeignKeys(
+                [NotNull] this IEntityType entityType,
+                in StoreObjectIdentifier storeObject)
+            // ReSharper disable once RedundantCast
+            => ((IReadOnlyEntityType)entityType).FindRowInternalForeignKeys(storeObject).Cast<IForeignKey>();
 
         /// <summary>
         ///     Gets a value indicating whether the associated table is ignored by Migrations.

@@ -7,8 +7,6 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-#nullable enable
-
 // ReSharper disable once CheckNamespace
 namespace Microsoft.EntityFrameworkCore
 {
@@ -25,7 +23,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <returns> The defining navigation if one exists or <see langword="null" /> otherwise. </returns>
         [Obsolete("Entity types with defining navigations have been replaced by shared-type entity types")]
         public static IConventionNavigation? FindDefiningNavigation([NotNull] this IConventionEntityType entityType)
-            => (IConventionNavigation?)((IReadOnlyEntityType)entityType).FindDefiningNavigation();
+            => (IConventionNavigation?)((IEntityType)entityType).FindDefiningNavigation();
 
         /// <summary>
         ///     Sets the LINQ query used as the default source for queries of this type.

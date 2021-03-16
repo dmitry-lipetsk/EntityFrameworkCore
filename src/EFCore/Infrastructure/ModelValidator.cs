@@ -15,8 +15,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 
-#nullable enable
-
 namespace Microsoft.EntityFrameworkCore.Infrastructure
 {
     /// <summary>
@@ -1040,10 +1038,10 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
                         }
                     }
 
-                    var keyValues = new object?[key.Properties.Count];
+                    var keyValues = new object[key.Properties.Count];
                     for (var i = 0; i < key.Properties.Count; i++)
                     {
-                        keyValues[i] = seedDatum[key.Properties[i].Name];
+                        keyValues[i] = seedDatum[key.Properties[i].Name]!;
                     }
 
                     foreach (var navigation in entityType.GetNavigations().Concat<INavigationBase>(entityType.GetSkipNavigations()))

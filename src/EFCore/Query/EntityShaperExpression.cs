@@ -14,8 +14,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Utilities;
 
-#nullable enable
-
 namespace Microsoft.EntityFrameworkCore.Query
 {
     /// <summary>
@@ -127,7 +125,7 @@ namespace Microsoft.EntityFrameworkCore.Query
 
                 var exception = CreateUnableToDiscriminateExceptionExpression(entityType, discriminatorValueVariable);
 
-                var discriminatorComparer = discriminatorProperty.GetKeyValueComparer()!;
+                var discriminatorComparer = discriminatorProperty.GetKeyValueComparer();
                 if (discriminatorComparer.IsDefault())
                 {
                     var switchCases = new SwitchCase[concreteEntityTypes.Length];

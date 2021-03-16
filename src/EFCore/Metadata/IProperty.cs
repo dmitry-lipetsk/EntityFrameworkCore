@@ -3,9 +3,9 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-
-#nullable enable
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Microsoft.EntityFrameworkCore.Metadata
 {
@@ -102,5 +102,19 @@ namespace Microsoft.EntityFrameworkCore.Metadata
         ///     The primary and alternate keys that use this property.
         /// </returns>
         new IEnumerable<IKey> GetContainingKeys();
+
+        /// <summary>
+        ///     Gets the <see cref="ValueComparer" /> for this property.
+        /// </summary>
+        /// <returns> The comparer. </returns>
+        [DebuggerStepThrough]
+        new ValueComparer GetValueComparer();
+
+        /// <summary>
+        ///     Gets the <see cref="ValueComparer" /> to use with keys for this property.
+        /// </summary>
+        /// <returns> The comparer. </returns>
+        [DebuggerStepThrough]
+        new ValueComparer GetKeyValueComparer();
     }
 }

@@ -13,8 +13,6 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-#nullable enable
-
 // ReSharper disable once CheckNamespace
 namespace Microsoft.EntityFrameworkCore.Cosmos.Diagnostics.Internal
 {
@@ -89,7 +87,7 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Diagnostics.Internal
         public static void ExecutingReadItem(
             [NotNull] this IDiagnosticsLogger<DbLoggerCategory.Database.Command> diagnostics,
             [NotNull] string containerId,
-            [CanBeNull] string partitionKey,
+            [CanBeNull] string? partitionKey,
             [NotNull] string resourceId)
         {
             var definition = CosmosResources.LogExecutingReadItem(diagnostics);

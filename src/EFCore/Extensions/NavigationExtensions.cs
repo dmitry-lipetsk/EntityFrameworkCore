@@ -7,8 +7,6 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Utilities;
 
-#nullable enable
-
 // ReSharper disable once CheckNamespace
 namespace Microsoft.EntityFrameworkCore
 {
@@ -29,7 +27,7 @@ namespace Microsoft.EntityFrameworkCore
         /// </returns>
         [DebuggerStepThrough]
         [Obsolete("Use IReadOnlyNavigation.IsOnDependent")]
-        public static bool IsDependentToPrincipal([NotNull] this IReadOnlyNavigation navigation)
+        public static bool IsDependentToPrincipal([NotNull] this INavigation navigation)
             => Check.NotNull(navigation, nameof(navigation)).IsOnDependent;
 
         /// <summary>
@@ -41,7 +39,7 @@ namespace Microsoft.EntityFrameworkCore
         /// </returns>
         [DebuggerStepThrough]
         [Obsolete("Use IReadOnlyNavigation.IsCollection")]
-        public static bool IsCollection([NotNull] this IReadOnlyNavigation navigation)
+        public static bool IsCollection([NotNull] this INavigation navigation)
             => Check.NotNull(navigation, nameof(navigation)).IsCollection;
 
         /// <summary>
@@ -54,7 +52,7 @@ namespace Microsoft.EntityFrameworkCore
         /// </returns>
         [DebuggerStepThrough]
         [Obsolete("Use IReadOnlyNavigation.Inverse")]
-        public static IReadOnlyNavigation? FindInverse([NotNull] this IReadOnlyNavigation navigation)
+        public static INavigation? FindInverse([NotNull] this INavigation navigation)
             => Check.NotNull(navigation, nameof(navigation)).Inverse;
 
         /// <summary>
@@ -65,7 +63,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <returns> The target entity type. </returns>
         [DebuggerStepThrough]
         [Obsolete("Use IReadOnlyNavigation.TargetEntityType")]
-        public static IReadOnlyEntityType GetTargetType([NotNull] this IReadOnlyNavigation navigation)
+        public static IEntityType GetTargetType([NotNull] this INavigation navigation)
             => Check.NotNull(navigation, nameof(navigation)).TargetEntityType;
 
         /// <summary>
@@ -74,7 +72,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="navigation"> The navigation property to find whether it should be eager loaded. </param>
         /// <returns> A value indicating whether this navigation should be eager loaded by default. </returns>
         [Obsolete("Use IReadOnlyNavigation.IsEagerLoaded")]
-        public static bool IsEagerLoaded([NotNull] this IReadOnlyNavigation navigation)
+        public static bool IsEagerLoaded([NotNull] this INavigation navigation)
             => Check.NotNull(navigation, nameof(navigation)).IsEagerLoaded;
     }
 }

@@ -29,7 +29,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="freeText">The text that will be searched for in the property.</param>
         /// <param name="languageTerm">A Language ID from the <c>sys.syslanguages</c> table.</param>
         public static bool FreeText(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             [NotNull] object propertyReference,
             [NotNull] string freeText,
             [NotParameterized] int languageTerm)
@@ -48,7 +48,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="propertyReference">The property on which the search will be performed.</param>
         /// <param name="freeText">The text that will be searched for in the property.</param>
         public static bool FreeText(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             [NotNull] object propertyReference,
             [NotNull] string freeText)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(FreeText)));
@@ -67,7 +67,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="searchCondition">The text that will be searched for in the property and the condition for a match.</param>
         /// <param name="languageTerm">A Language ID from the <c>sys.syslanguages</c> table.</param>
         public static bool Contains(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             [NotNull] object propertyReference,
             [NotNull] string searchCondition,
             [NotParameterized] int languageTerm)
@@ -86,7 +86,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="propertyReference">The property on which the search will be performed.</param>
         /// <param name="searchCondition">The text that will be searched for in the property and the condition for a match.</param>
         public static bool Contains(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             [NotNull] object propertyReference,
             [NotNull] string searchCondition)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(Contains)));
@@ -100,7 +100,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of year boundaries crossed between the dates.</returns>
         public static int DateDiffYear(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffYear)));
@@ -114,7 +114,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of year boundaries crossed between the dates.</returns>
         public static int? DateDiffYear(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffYear)));
@@ -128,7 +128,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of year boundaries crossed between the dates.</returns>
         public static int DateDiffYear(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffYear)));
@@ -142,7 +142,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of year boundaries crossed between the dates.</returns>
         public static int? DateDiffYear(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffYear)));
@@ -156,7 +156,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of month boundaries crossed between the dates.</returns>
         public static int DateDiffMonth(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMonth)));
@@ -170,7 +170,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of month boundaries crossed between the dates.</returns>
         public static int? DateDiffMonth(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMonth)));
@@ -184,7 +184,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of month boundaries crossed between the dates.</returns>
         public static int DateDiffMonth(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMonth)));
@@ -198,7 +198,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of month boundaries crossed between the dates.</returns>
         public static int? DateDiffMonth(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMonth)));
@@ -212,7 +212,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of day boundaries crossed between the dates.</returns>
         public static int DateDiffDay(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffDay)));
@@ -226,7 +226,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of day boundaries crossed between the dates.</returns>
         public static int? DateDiffDay(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffDay)));
@@ -240,7 +240,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of day boundaries crossed between the dates.</returns>
         public static int DateDiffDay(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffDay)));
@@ -254,7 +254,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of day boundaries crossed between the dates.</returns>
         public static int? DateDiffDay(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffDay)));
@@ -268,7 +268,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of hour boundaries crossed between the dates.</returns>
         public static int DateDiffHour(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffHour)));
@@ -282,7 +282,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of hour boundaries crossed between the dates.</returns>
         public static int? DateDiffHour(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffHour)));
@@ -296,7 +296,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of hour boundaries crossed between the dates.</returns>
         public static int DateDiffHour(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffHour)));
@@ -310,7 +310,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of hour boundaries crossed between the dates.</returns>
         public static int? DateDiffHour(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffHour)));
@@ -324,7 +324,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of hour boundaries crossed between the timespans.</returns>
         public static int DateDiffHour(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan startTimeSpan,
             TimeSpan endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffHour)));
@@ -338,7 +338,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of hour boundaries crossed between the timespans.</returns>
         public static int? DateDiffHour(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan? startTimeSpan,
             TimeSpan? endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffHour)));
@@ -352,7 +352,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of minute boundaries crossed between the dates.</returns>
         public static int DateDiffMinute(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMinute)));
@@ -366,7 +366,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of minute boundaries crossed between the dates.</returns>
         public static int? DateDiffMinute(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMinute)));
@@ -380,7 +380,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of minute boundaries crossed between the dates.</returns>
         public static int DateDiffMinute(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMinute)));
@@ -394,7 +394,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of minute boundaries crossed between the dates.</returns>
         public static int? DateDiffMinute(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMinute)));
@@ -408,7 +408,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of minute boundaries crossed between the timespans.</returns>
         public static int DateDiffMinute(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan startTimeSpan,
             TimeSpan endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMinute)));
@@ -422,7 +422,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of minute boundaries crossed between the timespans.</returns>
         public static int? DateDiffMinute(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan? startTimeSpan,
             TimeSpan? endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMinute)));
@@ -436,7 +436,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of second boundaries crossed between the dates.</returns>
         public static int DateDiffSecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffSecond)));
@@ -450,7 +450,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of second boundaries crossed between the dates.</returns>
         public static int? DateDiffSecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffSecond)));
@@ -464,7 +464,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of second boundaries crossed between the dates.</returns>
         public static int DateDiffSecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffSecond)));
@@ -478,7 +478,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of second boundaries crossed between the dates.</returns>
         public static int? DateDiffSecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffSecond)));
@@ -492,7 +492,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of second boundaries crossed between the timespans.</returns>
         public static int DateDiffSecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan startTimeSpan,
             TimeSpan endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffSecond)));
@@ -506,7 +506,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of second boundaries crossed between the timespans.</returns>
         public static int? DateDiffSecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan? startTimeSpan,
             TimeSpan? endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffSecond)));
@@ -520,7 +520,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of millisecond boundaries crossed between the dates.</returns>
         public static int DateDiffMillisecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMillisecond)));
@@ -534,7 +534,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of millisecond boundaries crossed between the dates.</returns>
         public static int? DateDiffMillisecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMillisecond)));
@@ -548,7 +548,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of millisecond boundaries crossed between the dates.</returns>
         public static int DateDiffMillisecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMillisecond)));
@@ -562,7 +562,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of millisecond boundaries crossed between the dates.</returns>
         public static int? DateDiffMillisecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMillisecond)));
@@ -576,7 +576,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of millisecond boundaries crossed between the timespans.</returns>
         public static int DateDiffMillisecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan startTimeSpan,
             TimeSpan endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMillisecond)));
@@ -590,7 +590,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of millisecond boundaries crossed between the timespans.</returns>
         public static int? DateDiffMillisecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan? startTimeSpan,
             TimeSpan? endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMillisecond)));
@@ -604,7 +604,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of microsecond boundaries crossed between the dates.</returns>
         public static int DateDiffMicrosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMicrosecond)));
@@ -618,7 +618,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of microsecond boundaries crossed between the dates.</returns>
         public static int? DateDiffMicrosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMicrosecond)));
@@ -632,7 +632,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of microsecond boundaries crossed between the dates.</returns>
         public static int DateDiffMicrosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMicrosecond)));
@@ -646,7 +646,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of microsecond boundaries crossed between the dates.</returns>
         public static int? DateDiffMicrosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMicrosecond)));
@@ -660,7 +660,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of microsecond boundaries crossed between the timespans.</returns>
         public static int DateDiffMicrosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan startTimeSpan,
             TimeSpan endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMicrosecond)));
@@ -674,7 +674,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of microsecond boundaries crossed between the timespans.</returns>
         public static int? DateDiffMicrosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan? startTimeSpan,
             TimeSpan? endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffMicrosecond)));
@@ -688,7 +688,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
         public static int DateDiffNanosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffNanosecond)));
@@ -702,7 +702,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
         public static int? DateDiffNanosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffNanosecond)));
@@ -716,7 +716,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
         public static int DateDiffNanosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffNanosecond)));
@@ -730,7 +730,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
         public static int? DateDiffNanosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffNanosecond)));
@@ -744,7 +744,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
         public static int DateDiffNanosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan startTimeSpan,
             TimeSpan endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffNanosecond)));
@@ -758,7 +758,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
         /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
         public static int? DateDiffNanosecond(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan? startTimeSpan,
             TimeSpan? endTimeSpan)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffNanosecond)));
@@ -772,7 +772,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of week boundaries crossed between the dates.</returns>
         public static int DateDiffWeek(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffWeek)));
@@ -786,7 +786,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of week boundaries crossed between the dates.</returns>
         public static int? DateDiffWeek(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffWeek)));
@@ -800,7 +800,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of week boundaries crossed between the dates.</returns>
         public static int DateDiffWeek(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffWeek)));
@@ -814,7 +814,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of week boundaries crossed between the dates.</returns>
         public static int? DateDiffWeek(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DateDiffWeek)));
@@ -827,7 +827,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="expression">Expression to validate</param>
         /// <returns>true for valid date and false otherwise.</returns>
         public static bool IsDate(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             [NotNull] string expression)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(IsDate)));
 
@@ -849,7 +849,7 @@ namespace Microsoft.EntityFrameworkCore
         ///     millisecond.
         /// </returns>
         public static DateTime DateTimeFromParts(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             int year,
             int month,
             int day,
@@ -869,7 +869,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="day">The day (1 through the number of days in month).</param>
         /// <returns>New instance of the <see cref="DateTime" /> structure to the specified year, month, day.</returns>
         public static DateTime DateFromParts(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             int year,
             int month,
             int day)
@@ -894,7 +894,7 @@ namespace Microsoft.EntityFrameworkCore
         ///     and precision.
         /// </returns>
         public static DateTime DateTime2FromParts(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             int year,
             int month,
             int day,
@@ -927,7 +927,7 @@ namespace Microsoft.EntityFrameworkCore
         ///     fractions, hourOffset, minuteOffset and precision.
         /// </returns>
         public static DateTimeOffset DateTimeOffsetFromParts(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             int year,
             int month,
             int day,
@@ -952,7 +952,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="minute">The minutes (0 through 59).</param>
         /// <returns>New instance of the <see cref="DateTime" /> structure to the specified year, month, day, hour and minute.</returns>
         public static DateTime SmallDateTimeFromParts(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             int year,
             int month,
             int day,
@@ -974,7 +974,7 @@ namespace Microsoft.EntityFrameworkCore
         ///     New instance of the <see cref="TimeSpan" /> structure to the specified hour, minute, second, fractions, and precision.
         /// </returns>
         public static TimeSpan TimeFromParts(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             int hour,
             int minute,
             int second,
@@ -989,7 +989,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="arg">The value to be examined for data length.</param>
         /// <returns>The number of bytes in the input value.</returns>
         public static int? DataLength(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             [CanBeNull] string arg)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DataLength)));
 
@@ -1000,7 +1000,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="arg">The value to be examined for data length.</param>
         /// <returns>The number of bytes in the input value.</returns>
         public static int? DataLength(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             bool? arg)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DataLength)));
 
@@ -1011,7 +1011,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="arg">The value to be examined for data length.</param>
         /// <returns>The number of bytes in the input value.</returns>
         public static int? DataLength(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             double? arg)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DataLength)));
 
@@ -1022,7 +1022,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="arg">The value to be examined for data length.</param>
         /// <returns>The number of bytes in the input value.</returns>
         public static int? DataLength(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             decimal? arg)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DataLength)));
 
@@ -1033,7 +1033,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="arg">The value to be examined for data length.</param>
         /// <returns>The number of bytes in the input value.</returns>
         public static int? DataLength(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTime? arg)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DataLength)));
 
@@ -1044,7 +1044,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="arg">The value to be examined for data length.</param>
         /// <returns>The number of bytes in the input value.</returns>
         public static int? DataLength(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             TimeSpan? arg)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DataLength)));
 
@@ -1055,7 +1055,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="arg">The value to be examined for data length.</param>
         /// <returns>The number of bytes in the input value.</returns>
         public static int? DataLength(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             DateTimeOffset? arg)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DataLength)));
 
@@ -1066,7 +1066,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="arg">The value to be examined for data length.</param>
         /// <returns>The number of bytes in the input value.</returns>
         public static int? DataLength(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             [CanBeNull] byte[] arg)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DataLength)));
 
@@ -1077,7 +1077,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="arg">The value to be examined for data length.</param>
         /// <returns>The number of bytes in the input value.</returns>
         public static int? DataLength(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             Guid? arg)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(DataLength)));
 
@@ -1089,7 +1089,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="expression">Expression to validate</param>
         /// <returns><see langword="true" /> for a valid numeric, otherwise <see langword="false" />.</returns>
         public static bool IsNumeric(
-            [CanBeNull] this DbFunctions _,
+            [NotNull] this DbFunctions _,
             [NotNull] string expression)
             => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(IsNumeric)));
     }

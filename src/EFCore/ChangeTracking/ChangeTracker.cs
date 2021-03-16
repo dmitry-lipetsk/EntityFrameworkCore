@@ -283,7 +283,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking
                         return false;
                     }
 
-                    n.NodeState(n);
+                    n.NodeState!(n);
 
                     return n.Entry.State != EntityState.Detached;
                 });
@@ -321,7 +321,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking
         /// <typeparam name="TState"> The type of the state object. </typeparam>
         public virtual void TrackGraph<TState>(
             [NotNull] object rootEntity,
-            [CanBeNull] TState state,
+            [CanBeNull] TState? state,
             [NotNull] Func<EntityEntryGraphNode<TState>, bool> callback)
         {
             Check.NotNull(rootEntity, nameof(rootEntity));
@@ -452,7 +452,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking
         /// </summary>
         /// <returns> A string that represents the current object. </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override string ToString()
+        public override string? ToString()
             => base.ToString();
 
         /// <summary>
@@ -461,7 +461,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking
         /// <param name="obj"> The object to compare with the current object. </param>
         /// <returns> <see langword="true" /> if the specified object is equal to the current object; otherwise, <see langword="false" />. </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => base.Equals(obj);
 
         /// <summary>

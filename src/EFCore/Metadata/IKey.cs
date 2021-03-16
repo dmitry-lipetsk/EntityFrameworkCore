@@ -6,8 +6,6 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-#nullable enable
-
 namespace Microsoft.EntityFrameworkCore.Metadata
 {
     /// <summary>
@@ -45,6 +43,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata
         /// </summary>
         /// <typeparam name="TKey"> The type of the key instance. </typeparam>
         /// <returns> The factory. </returns>
-        IPrincipalKeyValueFactory<TKey> GetPrincipalKeyValueFactory<TKey>();
+        IPrincipalKeyValueFactory<TKey> GetPrincipalKeyValueFactory<TKey>()
+            where TKey : notnull;
     }
 }

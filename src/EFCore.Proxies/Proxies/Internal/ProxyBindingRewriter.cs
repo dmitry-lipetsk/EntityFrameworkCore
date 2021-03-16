@@ -14,8 +14,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-#nullable enable
-
 namespace Microsoft.EntityFrameworkCore.Proxies.Internal
 {
     /// <summary>
@@ -120,7 +118,7 @@ namespace Microsoft.EntityFrameworkCore.Proxies.Internal
 
                         if (_options.UseLazyLoadingProxies)
                         {
-                            if (!navigationBase.PropertyInfo.GetMethod.IsReallyVirtual()
+                            if (!navigationBase.PropertyInfo.GetMethod!.IsReallyVirtual()
                                 && (!(navigationBase is INavigation navigation
                                     && navigation.ForeignKey.IsOwnership)))
                             {
@@ -144,7 +142,7 @@ namespace Microsoft.EntityFrameworkCore.Proxies.Internal
                                 {
                                     indexerChecked = true;
 
-                                    if (!property.PropertyInfo!.SetMethod.IsReallyVirtual())
+                                    if (!property.PropertyInfo!.SetMethod!.IsReallyVirtual())
                                     {
                                         if (clrType.IsGenericType
                                             && clrType.GetGenericTypeDefinition() == typeof(Dictionary<,>)
