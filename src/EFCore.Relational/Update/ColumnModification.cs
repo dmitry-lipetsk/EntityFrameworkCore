@@ -37,6 +37,31 @@ namespace Microsoft.EntityFrameworkCore.Update
         /// <summary>
         ///     Creates a new <see cref="ColumnModification" /> instance.
         /// </summary>
+        /// <param name="columnModificationParameters"> Creation parameters. </param>
+        public ColumnModification(in ColumnModificationParameters columnModificationParameters)
+        {
+            this.ColumnName               = columnModificationParameters.ColumnName;
+            this._originalValue           = columnModificationParameters.OriginalValue;
+            this._value                   = columnModificationParameters.Value;
+            this.Property                 = columnModificationParameters.Property;
+            this.ColumnType               = columnModificationParameters.ColumnType;
+            this.TypeMapping              = columnModificationParameters.TypeMapping;
+            this.IsRead                   = columnModificationParameters.IsRead;
+            this.IsWrite                  = columnModificationParameters.IsWrite;
+            this.IsKey                    = columnModificationParameters.IsKey;
+            this.IsCondition              = columnModificationParameters.IsCondition;
+            this._sensitiveLoggingEnabled = columnModificationParameters.SensitiveLoggingEnabled;
+            this.IsNullable               = columnModificationParameters.IsNullable;
+
+            this._generateParameterName   = columnModificationParameters.GenerateParameterName;
+            this.Entry                    = columnModificationParameters.Entry;
+
+            this._useParameters           = (this._generateParameterName != null);
+        }//ColumnModification
+
+        /// <summary>
+        ///     Creates a new <see cref="ColumnModification" /> instance.
+        /// </summary>
         /// <param name="entry"> The <see cref="IUpdateEntry" /> that represents the entity that is being modified. </param>
         /// <param name="property"> The property that maps to the column. </param>
         /// <param name="column"> The column to be modified. </param>
@@ -47,6 +72,7 @@ namespace Microsoft.EntityFrameworkCore.Update
         /// <param name="isKey"> Indicates whether or not the column part of a primary or alternate key.</param>
         /// <param name="isCondition"> Indicates whether or not the column is used in the <c>WHERE</c> clause when updating. </param>
         /// <param name="sensitiveLoggingEnabled"> Indicates whether or not potentially sensitive data (e.g. database values) can be logged. </param>
+        [Obsolete("Use the constructor with columnModificationParameters")]
         public ColumnModification(
             IUpdateEntry entry,
             IProperty property,
@@ -93,7 +119,7 @@ namespace Microsoft.EntityFrameworkCore.Update
         /// <param name="isCondition"> Indicates whether or not the column is used in the <c>WHERE</c> clause when updating. </param>
         /// <param name="isConcurrencyToken"> Indicates whether or not the column is acting as an optimistic concurrency token. </param>
         /// <param name="sensitiveLoggingEnabled"> Indicates whether or not potentially sensitive data (e.g. database values) can be logged. </param>
-        [Obsolete("Use the constructor with column")]
+        [Obsolete("Use the constructor with columnModificationParameters")]
         public ColumnModification(
             IUpdateEntry entry,
             IProperty property,
@@ -133,6 +159,7 @@ namespace Microsoft.EntityFrameworkCore.Update
         /// <param name="isCondition"> Indicates whether or not the column is used in the <c>WHERE</c> clause when updating. </param>
         /// <param name="sensitiveLoggingEnabled"> Indicates whether or not potentially sensitive data (e.g. database values) can be logged. </param>
         /// <param name="isNullable"> A value indicating whether the value could be null. </param>
+        [Obsolete("Use the constructor with columnModificationParameters")]
         public ColumnModification(
             string columnName,
             object? originalValue,
@@ -176,7 +203,7 @@ namespace Microsoft.EntityFrameworkCore.Update
         /// <param name="isKey"> Indicates whether or not the column part of a primary or alternate key.</param>
         /// <param name="isCondition"> Indicates whether or not the column is used in the <c>WHERE</c> clause when updating. </param>
         /// <param name="sensitiveLoggingEnabled"> Indicates whether or not potentially sensitive data (e.g. database values) can be logged. </param>
-        [Obsolete("Use the constructor with type mapping")]
+        [Obsolete("Use the constructor with columnModificationParameters")]
         public ColumnModification(
             string columnName,
             object? originalValue,
@@ -215,7 +242,7 @@ namespace Microsoft.EntityFrameworkCore.Update
         /// <param name="isKey"> Indicates whether or not the column part of a primary or alternate key.</param>
         /// <param name="isCondition"> Indicates whether or not the column is used in the <c>WHERE</c> clause when updating. </param>
         /// <param name="sensitiveLoggingEnabled"> Indicates whether or not potentially sensitive data (e.g. database values) can be logged. </param>
-        [Obsolete("Use the constructor with columnType")]
+        [Obsolete("Use the constructor with columnModificationParameters")]
         public ColumnModification(
             string columnName,
             object? originalValue,
