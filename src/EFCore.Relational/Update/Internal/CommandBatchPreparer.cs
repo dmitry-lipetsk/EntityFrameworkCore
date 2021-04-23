@@ -230,11 +230,11 @@ namespace Microsoft.EntityFrameworkCore.Update.Internal
                 AddUnchangedSharingEntries(sharedTablesCmdBuildersMap.Values, entries);
             }
 
-            var resultCommands = new List<IModificationCommand>(cmdBuilders.Count);
+            var resultCommands = new IModificationCommand[cmdBuilders.Count];
 
-            foreach (var cmdBuilder in cmdBuilders)
+            for (int i=0; i < cmdBuilders.Count; i++)
             {
-                resultCommands.Add(cmdBuilder.GetModificationCommand());
+                resultCommands[i] = cmdBuilders[i].GetModificationCommand();
             }
 
             return resultCommands;
