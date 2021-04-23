@@ -95,7 +95,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations.Operations
 
             for (var i = 0; i < KeyValues.GetLength(0); i++)
             {
-                var keys = new ColumnModification[KeyColumns.Length];
+                var keys = new IColumnModification[KeyColumns.Length];
                 for (var j = 0; j < KeyColumns.Length; j++)
                 {
                     var columnModificationParameters = new ColumnModificationParameters(
@@ -106,7 +106,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations.Operations
                     keys[j] = columnModificationFactory.CreateColumnModification(columnModificationParameters);
                 }
 
-                var modifications = new ColumnModification[Columns.Length];
+                var modifications = new IColumnModification[Columns.Length];
                 for (var j = 0; j < Columns.Length; j++)
                 {
                     var columnModificationParameters = new ColumnModificationParameters(
@@ -117,9 +117,10 @@ namespace Microsoft.EntityFrameworkCore.Migrations.Operations
                     modifications[j] = columnModificationFactory.CreateColumnModification(columnModificationParameters);
                 }
 
-                yield return new ModificationCommand(
-                    Table, Schema, keys.Concat(modifications).ToArray(), sensitiveLoggingEnabled: false,
-                    columnModificationFactory: columnModificationFactory);
+                var modificationCommandParameters = new ModificationCommandParameters(
+                    Table, Schema, keys.Concat(modifications).ToArray(), sensitiveLoggingEnabled: false);
+
+                yield return new ModificationCommand(modificationCommandParameters);
             }
         }
     }

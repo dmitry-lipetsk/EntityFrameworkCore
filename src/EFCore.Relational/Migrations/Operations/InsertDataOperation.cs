@@ -67,7 +67,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations.Operations
 
             for (var i = 0; i < Values.GetLength(0); i++)
             {
-                var modifications = new ColumnModification[Columns.Length];
+                var modifications = new IColumnModification[Columns.Length];
                 for (var j = 0; j < Columns.Length; j++)
                 {
                     var columnModificationParameters = new ColumnModificationParameters(
@@ -78,9 +78,10 @@ namespace Microsoft.EntityFrameworkCore.Migrations.Operations
                     modifications[j] = columnModificationFactory.CreateColumnModification(columnModificationParameters);
                 }
 
-                yield return new ModificationCommand(
-                    Table, Schema, modifications, sensitiveLoggingEnabled: false,
-                    columnModificationFactory: columnModificationFactory);
+                var modificationCommandParameters = new ModificationCommandParameters(
+                    Table, Schema, modifications, sensitiveLoggingEnabled: false);
+
+                yield return new ModificationCommand(modificationCommandParameters);
             }
         }
     }

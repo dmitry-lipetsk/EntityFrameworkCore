@@ -943,7 +943,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
         /// <param name="operation"> The data operation to generate commands for. </param>
         /// <param name="model"> The model. </param>
         /// <returns> The commands that correspond to the given operation. </returns>
-        protected virtual IEnumerable<ModificationCommand> GenerateModificationCommands(
+        protected virtual IEnumerable<IModificationCommand> GenerateModificationCommands(
             InsertDataOperation operation,
             IModel? model)
         {
@@ -976,7 +976,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
 
             for (var i = 0; i < operation.Values.GetLength(0); i++)
             {
-                var modifications = new ColumnModification[operation.Columns.Length];
+                var modifications = new IColumnModification[operation.Columns.Length];
                 for (var j = 0; j < operation.Columns.Length; j++)
                 {
                     var name = operation.Columns[j];
@@ -999,9 +999,10 @@ namespace Microsoft.EntityFrameworkCore.Migrations
                         columnModificationParameters);
                 }
 
-                yield return new ModificationCommand(
-                    operation.Table, operation.Schema, modifications, sensitiveLoggingEnabled: SensitiveLoggingEnabled,
-                    columnModificationFactory: Dependencies.ColumnModificationFactory);
+                var modificationCommandParameters = new ModificationCommandParameters(
+                    operation.Table, operation.Schema, modifications, sensitiveLoggingEnabled: SensitiveLoggingEnabled);
+
+                yield return new ModificationCommand(modificationCommandParameters);
             }
         }
 
@@ -1072,7 +1073,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
 
             for (var i = 0; i < operation.KeyValues.GetLength(0); i++)
             {
-                var modifications = new ColumnModification[operation.KeyColumns.Length];
+                var modifications = new IColumnModification[operation.KeyColumns.Length];
                 for (var j = 0; j < operation.KeyColumns.Length; j++)
                 {
                     var name = operation.KeyColumns[j];
@@ -1095,9 +1096,10 @@ namespace Microsoft.EntityFrameworkCore.Migrations
                         columnModificationParameters);
                 }
 
-                yield return new ModificationCommand(
-                    operation.Table, operation.Schema, modifications, sensitiveLoggingEnabled: SensitiveLoggingEnabled,
-                    columnModificationFactory: Dependencies.ColumnModificationFactory);
+                var modificationCommandParameters = new ModificationCommandParameters(
+                    operation.Table, operation.Schema, modifications, sensitiveLoggingEnabled: SensitiveLoggingEnabled);
+
+                yield return new ModificationCommand(modificationCommandParameters);
             }
         }
 
@@ -1193,7 +1195,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
 
             for (var i = 0; i < operation.KeyValues.GetLength(0); i++)
             {
-                var keys = new ColumnModification[operation.KeyColumns.Length];
+                var keys = new IColumnModification[operation.KeyColumns.Length];
                 for (var j = 0; j < operation.KeyColumns.Length; j++)
                 {
                     var name = operation.KeyColumns[j];
@@ -1216,7 +1218,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
                         columnModificationParameters);
                 }
 
-                var modifications = new ColumnModification[operation.Columns.Length];
+                var modifications = new IColumnModification[operation.Columns.Length];
                 for (var j = 0; j < operation.Columns.Length; j++)
                 {
                     var name = operation.Columns[j];
@@ -1239,10 +1241,11 @@ namespace Microsoft.EntityFrameworkCore.Migrations
                         columnModificationParameters);
                 }
 
-                yield return new ModificationCommand(
+                var modificationCommandParameters = new ModificationCommandParameters(
                     operation.Table, operation.Schema, keys.Concat(modifications).ToArray(),
-                    sensitiveLoggingEnabled: SensitiveLoggingEnabled,
-                    columnModificationFactory: Dependencies.ColumnModificationFactory);
+                    sensitiveLoggingEnabled: SensitiveLoggingEnabled);
+
+                yield return new ModificationCommand(modificationCommandParameters);
             }
         }
 
@@ -1971,7 +1974,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
         /// <param name="model"> The target model. </param>
         /// <param name="version"> The version. </param>
         /// <returns> <see langword="true" /> if the version could be retrieved. </returns>
-        protected virtual bool TryGetVersion(IModel? model, [NotNullWhen(true)] out string? version)
+        protected virtual bool TryGetVersion([NotNullWhen(true)] IModel? model, [NotNullWhen(true)] out string? version)
         {
             if (!(model?.GetProductVersion() is string versionString))
             {

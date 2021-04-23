@@ -4,7 +4,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -16,14 +15,17 @@ namespace Microsoft.EntityFrameworkCore.Update
 {
     /// <summary>
     ///     <para>
-    ///         Represents an update, insert, or delete operation for a single column. <see cref="ModificationCommand" />s
-    ///         contain lists of <see cref="ColumnModification" />s.
+    ///         Implementation of <see cref="IColumnModification" /> interface.
+    ///     </para>
+    ///     <para>
+    ///         Represents an update, insert, or delete operation for a single column. <see cref="IModificationCommand" />s
+    ///         contain lists of <see cref="IColumnModification" />s.
     ///     </para>
     ///     <para>
     ///         This type is typically used by database providers; it is generally not used in application code.
     ///     </para>
     /// </summary>
-    public class ColumnModification
+    public class ColumnModification : IColumnModification
     {
         private string? _parameterName;
         private string? _originalParameterName;
@@ -32,32 +34,31 @@ namespace Microsoft.EntityFrameworkCore.Update
         private object? _value;
         private readonly bool _useParameters;
         private readonly bool _sensitiveLoggingEnabled;
-        private List<ColumnModification>? _sharedColumnModifications;
+        private List<IColumnModification>? _sharedColumnModifications;
 
         /// <summary>
         ///     Creates a new <see cref="ColumnModification" /> instance.
         /// </summary>
         /// <param name="columnModificationParameters"> Creation parameters. </param>
-        public ColumnModification(in ColumnModificationParameters columnModificationParameters)
+        public ColumnModification(ColumnModificationParameters columnModificationParameters)
         {
-            this.ColumnName               = columnModificationParameters.ColumnName;
-            this._originalValue           = columnModificationParameters.OriginalValue;
-            this._value                   = columnModificationParameters.Value;
-            this.Property                 = columnModificationParameters.Property;
-            this.ColumnType               = columnModificationParameters.ColumnType;
-            this.TypeMapping              = columnModificationParameters.TypeMapping;
-            this.IsRead                   = columnModificationParameters.IsRead;
-            this.IsWrite                  = columnModificationParameters.IsWrite;
-            this.IsKey                    = columnModificationParameters.IsKey;
-            this.IsCondition              = columnModificationParameters.IsCondition;
-            this._sensitiveLoggingEnabled = columnModificationParameters.SensitiveLoggingEnabled;
-            this.IsNullable               = columnModificationParameters.IsNullable;
+            ColumnName               = columnModificationParameters.ColumnName;
+            _originalValue           = columnModificationParameters.OriginalValue;
+            _value                   = columnModificationParameters.Value;
+            Property                 = columnModificationParameters.Property;
+            ColumnType               = columnModificationParameters.ColumnType;
+            TypeMapping              = columnModificationParameters.TypeMapping;
+            IsRead                   = columnModificationParameters.IsRead;
+            IsWrite                  = columnModificationParameters.IsWrite;
+            IsKey                    = columnModificationParameters.IsKey;
+            IsCondition              = columnModificationParameters.IsCondition;
+            _sensitiveLoggingEnabled = columnModificationParameters.SensitiveLoggingEnabled;
+            IsNullable               = columnModificationParameters.IsNullable;
+            _generateParameterName   = columnModificationParameters.GenerateParameterName;
+            Entry                    = columnModificationParameters.Entry;
 
-            this._generateParameterName   = columnModificationParameters.GenerateParameterName;
-            this.Entry                    = columnModificationParameters.Entry;
-
-            this._useParameters           = (this._generateParameterName != null);
-        }//ColumnModification
+            _useParameters           = (_generateParameterName != null);
+        }
 
         /// <summary>
         ///     Creates a new <see cref="ColumnModification" /> instance.
@@ -330,22 +331,16 @@ namespace Microsoft.EntityFrameworkCore.Update
 #pragma warning restore CS8775
 
         /// <summary>
-        ///     A delegate for generating parameter names for the update SQL
-        /// </summary>
-        protected virtual Func<string>? GenerateParameterName
-            => _generateParameterName;
-
-        /// <summary>
         ///     The parameter name to use for the current value parameter (<see cref="UseCurrentValueParameter" />), if needed.
         /// </summary>
         public virtual string? ParameterName
-            => InternalValueOfParameterName ??= UseCurrentValueParameter ? GenerateParameterName!() : null;
- 
+            => _parameterName ??= UseCurrentValueParameter ? _generateParameterName!() : null;
+
         /// <summary>
         ///     The parameter name to use for the original value parameter (<see cref="UseOriginalValueParameter" />), if needed.
         /// </summary>
         public virtual string? OriginalParameterName
-            => InternalValueOfOriginalParameterName ??= UseOriginalValueParameter ? GenerateParameterName!() : null;
+            => _originalParameterName ??= UseOriginalValueParameter ? _generateParameterName!() : null;
 
         /// <summary>
         ///     The name of the column.
@@ -399,45 +394,17 @@ namespace Microsoft.EntityFrameworkCore.Update
         }
 
         /// <summary>
-        ///     The internal value of parameter name to use for the current value parameter.
-        /// </summary>
-        protected virtual string? InternalValueOfParameterName
-        {
-            get
-                => _parameterName;
-
-            set
-            {
-                _parameterName = value;
-            }
-        }
-
-        /// <summary>
-        ///     The internal value of parameter name to use for the original value parameter.
-        /// </summary>
-        protected virtual string? InternalValueOfOriginalParameterName
-        {
-            get
-                => _originalParameterName;
-
-            set
-            {
-                _originalParameterName = value;
-            }
-        }
-
-        /// <summary>
         ///     Adds a modification affecting the same database value.
         /// </summary>
         /// <param name="modification"> The modification for the shared column. </param>
-        public virtual void AddSharedColumnModification(ColumnModification modification)
+        public virtual void AddSharedColumnModification(IColumnModification modification)
         {
             Check.DebugAssert(Entry is not null, "Entry is not null");
             Check.DebugAssert(Property is not null, "Property is not null");
             Check.DebugAssert(modification.Entry is not null, "modification.Entry is not null");
             Check.DebugAssert(modification.Property is not null, "modification.Property is not null");
 
-            _sharedColumnModifications ??= new List<ColumnModification>();
+            _sharedColumnModifications ??= new List<IColumnModification>();
 
             if (UseCurrentValueParameter
                 && !StructuralComparisons.StructuralEqualityComparer.Equals(Value, modification.Value))

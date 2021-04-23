@@ -55,7 +55,7 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
             {
                 { typeof(IKeyValueIndexFactorySource), new ServiceCharacteristics(ServiceLifetime.Singleton) },
                 { typeof(IParameterNameGeneratorFactory), new ServiceCharacteristics(ServiceLifetime.Singleton) },
-                { typeof(IComparer<ModificationCommand>), new ServiceCharacteristics(ServiceLifetime.Singleton) },
+                { typeof(IComparer<IModificationCommand>), new ServiceCharacteristics(ServiceLifetime.Singleton) },
                 { typeof(IMigrationsIdGenerator), new ServiceCharacteristics(ServiceLifetime.Singleton) },
                 { typeof(ISqlGenerationHelper), new ServiceCharacteristics(ServiceLifetime.Singleton) },
                 { typeof(IRelationalAnnotationProvider), new ServiceCharacteristics(ServiceLifetime.Singleton) },
@@ -75,7 +75,9 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
                 { typeof(IRelationalQueryStringFactory), new ServiceCharacteristics(ServiceLifetime.Singleton) },
                 { typeof(ICommandBatchPreparer), new ServiceCharacteristics(ServiceLifetime.Scoped) },
                 { typeof(IModificationCommandBatchFactory), new ServiceCharacteristics(ServiceLifetime.Scoped) },
-                { typeof(IColumnModificationFactory), new ServiceCharacteristics(ServiceLifetime.Singleton) },
+                { typeof(IColumnModificationFactory), new ServiceCharacteristics(ServiceLifetime.Scoped) },
+                { typeof(IModificationCommandFactory), new ServiceCharacteristics(ServiceLifetime.Scoped) },
+                { typeof(IModificationCommandBuilderFactory), new ServiceCharacteristics(ServiceLifetime.Scoped) },
                 { typeof(IMigrationsModelDiffer), new ServiceCharacteristics(ServiceLifetime.Scoped) },
                 { typeof(IMigrationsSqlGenerator), new ServiceCharacteristics(ServiceLifetime.Scoped) },
                 { typeof(IMigrator), new ServiceCharacteristics(ServiceLifetime.Scoped) },
@@ -86,6 +88,10 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
                 { typeof(IRelationalDatabaseCreator), new ServiceCharacteristics(ServiceLifetime.Scoped) },
                 { typeof(IHistoryRepository), new ServiceCharacteristics(ServiceLifetime.Scoped) },
                 { typeof(INamedConnectionStringResolver), new ServiceCharacteristics(ServiceLifetime.Scoped) },
+                { typeof(IRelationalConnectionDiagnosticsLogger), new ServiceCharacteristics(ServiceLifetime.Scoped) },
+                { typeof(IDiagnosticsLogger<DbLoggerCategory.Database.Connection>), new ServiceCharacteristics(ServiceLifetime.Scoped) },
+                { typeof(IRelationalCommandDiagnosticsLogger), new ServiceCharacteristics(ServiceLifetime.Scoped) },
+                { typeof(IDiagnosticsLogger<DbLoggerCategory.Database.Command>), new ServiceCharacteristics(ServiceLifetime.Scoped) },
                 { typeof(IInterceptor), new ServiceCharacteristics(ServiceLifetime.Scoped, multipleRegistrations: true) },
                 {
                     typeof(IRelationalTypeMappingSourcePlugin),
@@ -129,7 +135,7 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         public override EntityFrameworkServicesBuilder TryAddCoreServices()
         {
             TryAdd<IParameterNameGeneratorFactory, ParameterNameGeneratorFactory>();
-            TryAdd<IComparer<ModificationCommand>, ModificationCommandComparer>();
+            TryAdd<IComparer<IModificationCommand>, ModificationCommandComparer>();
             TryAdd<IMigrationsIdGenerator, MigrationsIdGenerator>();
             TryAdd<IKeyValueIndexFactorySource, KeyValueIndexFactorySource>();
             TryAdd<IModelCustomizer, RelationalModelCustomizer>();
@@ -147,6 +153,8 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
             TryAdd<IRawSqlCommandBuilder, RawSqlCommandBuilder>();
             TryAdd<ICommandBatchPreparer, CommandBatchPreparer>();
             TryAdd<IColumnModificationFactory, ColumnModificationFactory>();
+            TryAdd<IModificationCommandFactory, ModificationCommandFactory>();
+            TryAdd<IModificationCommandBuilderFactory, ModificationCommandBuilderFactory>();
             TryAdd<IMigrationsModelDiffer, MigrationsModelDiffer>();
             TryAdd<IMigrationsSqlGenerator, MigrationsSqlGenerator>();
             TryAdd<IExecutionStrategyFactory, RelationalExecutionStrategyFactory>();
@@ -161,6 +169,10 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
             TryAdd<IRelationalTransactionFactory, RelationalTransactionFactory>();
             TryAdd<IDatabaseFacadeDependencies>(p => p.GetRequiredService<IRelationalDatabaseFacadeDependencies>());
             TryAdd<IRelationalDatabaseFacadeDependencies, RelationalDatabaseFacadeDependencies>();
+            TryAdd<IRelationalConnectionDiagnosticsLogger, RelationalConnectionDiagnosticsLogger>();
+            TryAdd<IDiagnosticsLogger<DbLoggerCategory.Database.Connection>>(p => p.GetRequiredService<IRelationalConnectionDiagnosticsLogger>());
+            TryAdd<IRelationalCommandDiagnosticsLogger, RelationalCommandDiagnosticsLogger>();
+            TryAdd<IDiagnosticsLogger<DbLoggerCategory.Database.Command>>(p => p.GetRequiredService<IRelationalCommandDiagnosticsLogger>());
             TryAdd<IInterceptorAggregator, DbConnectionInterceptorAggregator>();
             TryAdd<IInterceptorAggregator, DbTransactionInterceptorAggregator>();
             TryAdd<IInterceptorAggregator, DbCommandInterceptorAggregator>();
@@ -211,7 +223,8 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
                 .AddDependencyScoped<RelationalConnectionDependencies>()
                 .AddDependencyScoped<RelationalDatabaseDependencies>()
                 .AddDependencyScoped<RelationalQueryContextDependencies>()
-                .AddDependencyScoped<RelationalQueryCompilationContextDependencies>();
+                .AddDependencyScoped<RelationalQueryCompilationContextDependencies>()
+                .AddDependencyScoped<ModificationCommandBuilderFactoryDependencies>();
 
             return base.TryAddCoreServices();
         }

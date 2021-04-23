@@ -2,12 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Utilities;
@@ -22,7 +16,7 @@ namespace Microsoft.EntityFrameworkCore.Update
     ///         This type is typically used by database providers; it is generally not used in application code.
     ///     </para>
     /// </summary>
-    public struct ColumnModificationParameters
+    public sealed record ColumnModificationParameters
     {
 #if DEBUG
         /// <summary>
@@ -44,63 +38,63 @@ namespace Microsoft.EntityFrameworkCore.Update
         /// <summary>
         ///   Internal Debug API.
         /// </summary>
-        public readonly EnumDebugInitKind DebugInitKind;
+        public EnumDebugInitKind DebugInitKind  { get; init; }
 #endif
 
         /// <summary>
         ///  A delegate for generating parameter names for the update SQL.
         /// </summary>
-        public Func<string>? GenerateParameterName;
+        public Func<string>? GenerateParameterName  { get; init; }
 
         /// <summary>
         ///  The original value of the property mapped to column.
         /// </summary>
-        public object? OriginalValue;
+        public object? OriginalValue  { get; init; }
 
         /// <summary>
         ///  Current value of the property mapped to column.
         /// </summary>
-        public object? Value;
+        public object? Value  { get; init; }
 
         /// <summary>
         ///  Indicates whether or not potentially sensitive data (e.g. database values) can be logged.
         /// </summary>
-        public bool SensitiveLoggingEnabled;
+        public bool SensitiveLoggingEnabled  { get; init; }
 
         /// <summary>
         ///     The <see cref="IUpdateEntry" /> that represents the entity that is being modified.
         /// </summary>
-        public IUpdateEntry? Entry;
+        public IUpdateEntry? Entry  { get; init; }
 
         /// <summary>
         ///     The property that maps to the column.
         /// </summary>
-        public IProperty? Property;
+        public IProperty? Property  { get; init; }
 
         /// <summary>
         ///     The relational type mapping for the column.
         /// </summary>
-        public RelationalTypeMapping? TypeMapping;
+        public RelationalTypeMapping? TypeMapping  { get; init; }
 
         /// <summary>
         ///     A value indicating whether the column could contain a null value.
         /// </summary>
-        public bool? IsNullable;
+        public bool? IsNullable  { get; init; }
 
         /// <summary>
         ///     Indicates whether or not a value must be read from the database for the column.
         /// </summary>
-        public bool IsRead;
+        public bool IsRead  { get; init; }
 
         /// <summary>
         ///     Indicates whether or not a value must be written to the database for the column.
         /// </summary>
-        public bool IsWrite;
+        public bool IsWrite  { get; init; }
 
         /// <summary>
         ///     Indicates whether or not the column is used in the <c>WHERE</c> clause when updating.
         /// </summary>
-        public bool IsCondition;
+        public bool IsCondition  { get; init; }
 
         // /// <summary>
         // ///     Indicates whether or not the column is concurrency token.
@@ -111,17 +105,17 @@ namespace Microsoft.EntityFrameworkCore.Update
         /// <summary>
         ///     Indicates whether or not the column is part of a primary or alternate key.
         /// </summary>
-        public bool IsKey;
+        public bool IsKey  { get; init; }
 
         /// <summary>
         ///     The name of the column.
         /// </summary>
-        public string ColumnName;
+        public string ColumnName  { get; init; }
 
         /// <summary>
         ///     The database type of the column.
         /// </summary>
-        public string? ColumnType;
+        public string? ColumnType  { get; init; }
 
         /// <summary>
         ///     Creates a new <see cref="ColumnModificationParameters" /> instance.
@@ -155,26 +149,26 @@ namespace Microsoft.EntityFrameworkCore.Update
             Check.NotNull(columnName, nameof(columnName));
 
 #if DEBUG
-            this.DebugInitKind=EnumDebugInitKind.Kind001;
+            DebugInitKind=EnumDebugInitKind.Kind001;
 #endif
 
-            this.ColumnName = columnName;
-            this.OriginalValue = originalValue;
-            this.Value = value;
-            this.Property = property;
-            this.ColumnType = columnType;
-            this.TypeMapping = typeMapping;
-            this.IsRead = valueIsRead;
-            this.IsWrite = valueIsWrite;
-            this.IsKey = columnIsKey;
-            this.IsCondition = columnIsCondition;
-            this.SensitiveLoggingEnabled = sensitiveLoggingEnabled;
-            this.IsNullable = isNullable;
+            ColumnName = columnName;
+            OriginalValue = originalValue;
+            Value = value;
+            Property = property;
+            ColumnType = columnType;
+            TypeMapping = typeMapping;
+            IsRead = valueIsRead;
+            IsWrite = valueIsWrite;
+            IsKey = columnIsKey;
+            IsCondition = columnIsCondition;
+            SensitiveLoggingEnabled = sensitiveLoggingEnabled;
+            IsNullable = isNullable;
 
-            this.GenerateParameterName = null;
-            this.Entry = null;
+            GenerateParameterName = null;
+            Entry = null;
 
-            //this.IsConcurrencyToken = false;
+            //IsConcurrencyToken = false;
         }
 
         /// <summary>
@@ -209,26 +203,26 @@ namespace Microsoft.EntityFrameworkCore.Update
             Check.NotNull(generateParameterName, nameof(generateParameterName));
 
 #if DEBUG
-            this.DebugInitKind=EnumDebugInitKind.Kind002;
+            DebugInitKind=EnumDebugInitKind.Kind002;
 #endif
 
-            this.ColumnName = column.Name;
-            this.OriginalValue = null;
-            this.Value = null;
-            this.Property = property;
-            this.ColumnType = column.StoreType;
-            this.TypeMapping = typeMapping;
-            this.IsRead = valueIsRead;
-            this.IsWrite = valueIsWrite;
-            this.IsKey = columnIsKey;
-            this.IsCondition = columnIsCondition;
-            this.SensitiveLoggingEnabled = sensitiveLoggingEnabled;
-            this.IsNullable = column.IsNullable;
+            ColumnName = column.Name;
+            OriginalValue = null;
+            Value = null;
+            Property = property;
+            ColumnType = column.StoreType;
+            TypeMapping = typeMapping;
+            IsRead = valueIsRead;
+            IsWrite = valueIsWrite;
+            IsKey = columnIsKey;
+            IsCondition = columnIsCondition;
+            SensitiveLoggingEnabled = sensitiveLoggingEnabled;
+            IsNullable = column.IsNullable;
 
-            this.GenerateParameterName = generateParameterName;
-            this.Entry = entry;
+            GenerateParameterName = generateParameterName;
+            Entry = entry;
 
-            //this.IsConcurrencyToken = false;
+            //IsConcurrencyToken = false;
         }
-    };//struct ColumnModificationParameters
+    }
 }
