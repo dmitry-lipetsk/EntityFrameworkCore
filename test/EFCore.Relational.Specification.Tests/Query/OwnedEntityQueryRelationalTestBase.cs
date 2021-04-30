@@ -45,7 +45,7 @@ namespace Microsoft.EntityFrameworkCore.Query
             {
                 modelBuilder.Entity<Root24777>(b =>
                 {
-                    b.ToTable("Root");
+                    b.ToTable(nameof(Root24777));
                     b.HasKey(x => x.Id);
                     b.OwnsOne(x => x.ModdleA, ob =>
                     {
