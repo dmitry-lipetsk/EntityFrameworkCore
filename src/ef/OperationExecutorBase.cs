@@ -140,6 +140,16 @@ namespace Microsoft.EntityFrameworkCore.Tools
         public IEnumerable<IDictionary> GetContextTypes()
             => InvokeOperation<IEnumerable<IDictionary>>("GetContextTypes");
 
+        public void Optimize(string? outputDir, string? modelNamespace, string? contextType)
+            => InvokeOperation(
+                "Optimize",
+                new Dictionary<string, object?>
+                {
+                    ["outputDir"] = outputDir,
+                    ["modelNamespace"] = modelNamespace,
+                    ["contextType"] = contextType
+                });
+
         public IDictionary ScaffoldContext(
             string provider,
             string connectionString,
